@@ -7,9 +7,30 @@ permissions:
     languages: false
     system: false
     users: false
-  files: false
+  files:
+    create: false
+    changeName: false
+    changeTemplate: false
+    delete: false
+    read: true
+    replace: false
+    update: false
   languages: false
-  pages: false
+  pages:
+    access: true
+    changeSlug: false
+    changeStatus: false
+    changeTemplate: false
+    changeTitle: false
+    create: false
+    delete: false
+    list: true
+    move: false
+    duplicate: false
+    preview: false
+    read: true
+    sort: false
+    update: true
   site:
     changeTitle: false
     update: true

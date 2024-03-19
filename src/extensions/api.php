@@ -1,7 +1,7 @@
 <?php
 
-use Kirby\Http\Response;
 use Kirby\Form\Form;
+use Kirby\Http\Response;
 
 return [
     'routes' => fn (\Kirby\Cms\App $kirby) => [
