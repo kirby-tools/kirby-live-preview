@@ -1,0 +1,29 @@
+title: Home
+
+icon: 🏠
+
+options:
+  changeStatus: false
+
+columns:
+  - width: 1/2
+    sections:
+      content:
+        type: fields
+        fields:
+          headline:
+            type: text
+          subheadline:
+            type: text
+
+      photography:
+        label: Photography
+        extends: sections/albums
+        status: listed
+        size: small
+        help: All projects for the homepage are being pulled from the photography page.
+
+  - width: 1/2
+    sections:
+      preview:
+        type: preview

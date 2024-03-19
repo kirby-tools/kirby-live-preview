@@ -1,0 +1,17 @@
+title: Photos
+
+icon: 🖼
+
+sections:
+  drafts:
+    extends: sections/albums
+    label: Drafts
+    status: draft
+
+  listed:
+    extends: sections/albums
+    label: Published Albums
+    status: listed
+
+  preview:
+    type: preview
