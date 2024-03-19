@@ -6,7 +6,7 @@ use Kirby\Form\Form;
 return [
     'routes' => fn (\Kirby\Cms\App $kirby) => [
         [
-            'pattern' => '__preview__/render',
+            'pattern' => '__live-preview__/render',
             'method' => 'POST',
             'action' => function () use ($kirby) {
                 $request = $kirby->request();

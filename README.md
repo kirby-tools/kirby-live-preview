@@ -2,7 +2,7 @@
 
 ## Welcome!
 
-Thank you for purchasing Kirby Live Preview. We are glad to have you on board and hope you will enjoy reviewing all content changes immediately side by side in the Panel.
+Thank you for purchasing Kirby Live Preview. We are glad to have you on board and hope you will enjoy reviewing all the content changes right in the Panel.
 
 ## Getting Started
 
@@ -32,4 +32,4 @@ We value your feedback and ideas for improving Kirby Live Preview. If you have a
 
 ## Thank You
 
-Once again, thank you for choosing Kirby Live Preview. We hope this much requested Kirby feature will ease content management for you and your clients.
+Thank you again for choosing Kirby Live Preview. We hope this much requested Kirby feature will make content management easier for you and your customers.

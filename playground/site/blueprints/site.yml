@@ -10,6 +10,13 @@ columns:
           - **Unsaved Content**: See changes before saving
           - **Preview Links**: Internal links in the preview will open the corresponding Panel page
         theme: positive
+
+  - width: 1/1
+    sections:
+      preview:
+        label: Site Preview
+        type: preview
+
   - width: 1/2
     sections:
       albums: sections/albums
@@ -25,9 +32,3 @@ columns:
           - about
           - home
           - default
-
-  - width: 1/1
-    sections:
-      preview:
-        label: Site Preview
-        type: preview

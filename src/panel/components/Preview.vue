@@ -10,9 +10,10 @@ import {
   useStore,
   watch,
 } from "kirbyuse";
+import throttle from "throttleit";
+import { joinURL, withLeadingSlash } from "ufo";
 import { section } from "kirbyuse/props";
 import { LOG_LEVELS } from "../constants";
-import { throttle } from "../utils/throttle";
 
 const propsDefinition = {
   ...section,
@@ -113,7 +114,7 @@ async function renderPreview(content, { persistScrollPosition = true } = {}) {
   isRendering.value = true;
 
   try {
-    const { result } = await api.post("__preview__/render", {
+    const { result } = await api.post("__live-preview__/render", {
       id,
       content,
       pointerEvents: pointerEvents.value,
@@ -139,6 +140,9 @@ async function renderPreview(content, { persistScrollPosition = true } = {}) {
       });
     }
 
+    // Wait just a bit to let images load
+    await new Promise((resolve) => setTimeout(resolve, 50));
+
     isRendering.value = false;
     hasError.value = false;
     transitionBlobUrl.value = blobUrl.value;
@@ -154,10 +158,6 @@ async function renderPreview(content, { persistScrollPosition = true } = {}) {
   }
 }
 
-function resetPreview() {
-  renderPreview(unsavedContent.value, { persistScrollPosition: false });
-}
-
 function t(value) {
   if (!value || typeof value === "string") return value;
   return value[panel.translation.code] ?? Object.values(value)[0];
@@ -167,22 +167,40 @@ function updateSectionHeight() {
   containerRect.value = container.value.getBoundingClientRect();
 }
 
-function handleMessage({ data }) {
+async function handleMessage({ data }) {
   if (data.type === "link") {
     const url = new URL(data.href);
 
-    if (url.origin !== window.location.origin) return;
+    if (url.origin !== window.location.origin) {
+      window.open(data.href, "_blank");
+      return;
+    }
+
     if (
       ["assets", "media"].some((path) => url.pathname.startsWith(`/${path}/`))
-    )
+    ) {
       return;
+    }
 
     let path = url.pathname.slice(1);
 
-    // Replace Kirby path parameters, like `notes/tag:sky`
-    path = path.replace(/\/[^\/]+?:.+$/, "");
+    if (path) {
+      // Replace Kirby path parameters, like `notes/tag:sky`
+      path = path.replace(/\/[^\/]+?:.+$/, "");
+      path = joinURL("pages", path.replace(/\//g, "+"));
+    } else {
+      path = "site";
+    }
 
-    panel.view.open(path ? `pages/${path.replace(/\//g, "+")}` : "site");
+    // Custom implementation of `panel.open` to avoid error notifications
+    try {
+      panel.isLoading = true;
+      const state = await panel.get(withLeadingSlash(path));
+      panel.set(state);
+      panel.isLoading = false;
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
 </script>
@@ -194,22 +212,25 @@ function handleMessage({ data }) {
         variant="filled"
         size="xs"
         icon="live-preview-restart"
-        @click="resetPreview"
+        @click="
+          throttledRenderPreview(unsavedContent, {
+            persistScrollPosition: false,
+          })
+        "
       />
     </k-button-group>
 
+    <!-- klp-border klp-border-dashed klp-border-[var(--color-gray-300)] -->
     <div
       ref="container"
-      class="klp-grid klp-min-h-[50dvh] klp-rounded-[var(--input-rounded)] klp-border klp-border-dashed klp-border-[var(--color-gray-300)]"
-      :class="[
-        isRendering && 'klp-pointer-events-none',
-        hasError && 'klp-bg-white',
-      ]"
+      class="klp-grid klp-min-h-[50dvh] klp-rounded-[var(--input-rounded)]"
+      :class="[isRendering && 'klp-pointer-events-none']"
       :style="{
+        aspectRatio,
         height: aspectRatio
           ? 'auto'
           : `calc(100dvh - ${containerRect.top ?? 0}px - var(--spacing-3))`,
-        aspectRatio,
+        boxShadow: 'var(--shadow-md)',
       }"
     >
       <iframe
@@ -236,7 +257,7 @@ function handleMessage({ data }) {
       />
       <div
         v-if="hasError"
-        class="klp-flex klp-items-center klp-justify-center"
+        class="klp-flex klp-items-center klp-justify-center klp-rounded-[var(--input-rounded)] klp-bg-white"
         :style="{
           gridArea: '1 / 1 / 1 / 1',
         }"
@@ -246,7 +267,11 @@ function handleMessage({ data }) {
           theme="notice"
           icon="alert"
           :text="panel.t('johannschopplich.preview.error.render')"
-          @click="resetPreview"
+          @click="
+            throttledRenderPreview(unsavedContent, {
+              persistScrollPosition: false,
+            })
+          "
         />
       </div>
     </div>
