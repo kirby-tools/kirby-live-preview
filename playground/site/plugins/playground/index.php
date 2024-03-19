@@ -9,7 +9,7 @@ App::plugin('johannschopplich/playground', [
     'hooks' => [
         '*.update:before' => function (Event $event) {
             if (env('KIRBY_DEBUG', false) === false) {
-                throw new Exception('Saving changed content to the playground is not allowed. You can only preview changes made locally.');
+                throw new Exception('Saving changed content to the playground is not allowed. You can only make changes locally.');
             }
         },
 
