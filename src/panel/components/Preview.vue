@@ -224,13 +224,15 @@ async function handleMessage({ data }) {
     <div
       ref="container"
       class="klp-grid klp-min-h-[50dvh] klp-rounded-[var(--input-rounded)]"
-      :class="[isRendering && 'klp-pointer-events-none']"
+      :class="[
+        isRendering && 'klp-pointer-events-none',
+        blobUrl && !hasError && 'k-shadow-md',
+      ]"
       :style="{
         aspectRatio,
         height: aspectRatio
           ? 'auto'
           : `calc(100dvh - ${containerRect.top ?? 0}px - var(--spacing-3))`,
-        boxShadow: 'var(--shadow-md)',
       }"
     >
       <iframe
@@ -257,7 +259,7 @@ async function handleMessage({ data }) {
       />
       <div
         v-if="hasError"
-        class="klp-flex klp-items-center klp-justify-center klp-rounded-[var(--input-rounded)] klp-bg-white"
+        class="klp-flex klp-items-center klp-justify-center klp-rounded-[var(--input-rounded)] klp-border klp-border-dashed klp-border-[var(--color-gray-400)]"
         :style="{
           gridArea: '1 / 1 / 1 / 1',
         }"
@@ -279,3 +281,9 @@ async function handleMessage({ data }) {
     <k-text v-if="help" class="k-help klp-mt-2" :html="help" />
   </k-section>
 </template>
+
+<style scoped>
+.k-shadow-md {
+  box-shadow: var(--shadow-md);
+}
+</style>

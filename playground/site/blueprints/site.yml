@@ -2,13 +2,16 @@ columns:
   - width: 1/1
     fields:
       infoGettingStarted:
-        label: Getting Started
+        label: Kirby Starterkit + Live Preview
         type: info
         text: |
-          This is the starter kit you know and love. But now, each page template has a live preview of the page's content. It will update as you type!
+          This is the sample site you know and love. But with a twist: **Each page template has a live preview** of the page's content. It updates as you type! This is meant to serve as an example of how Kirby Live Preview will work in your projects.
 
-          - **Unsaved Content**: See changes before saving
-          - **Preview Links**: Internal links in the preview will open the corresponding Panel page
+          Watch the magic happen as you click through the pages. Note the following features:
+
+          - **Unsaved content**: See changes before they are saved.
+          - **Panel redirects**: Site links in the preview will open the corresponding page in the Panel.
+          - **Section behavior**: Place the preview section where you need it. It will match the surrounding layout.
         theme: positive
 
   - width: 1/1
