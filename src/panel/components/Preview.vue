@@ -100,6 +100,8 @@ onBeforeUnmount(() => {
 });
 
 async function renderPreview(content, { persistScrollPosition = true } = {}) {
+  if (isRendering.value) return;
+
   const id = panel.view.path.startsWith("pages/")
     ? panel.view.path.slice(6).replace(/\+/g, "/")
     : undefined;
