@@ -8,7 +8,7 @@ use Kirby\Panel\Panel;
 
 App::plugin('johannschopplich/playground', [
     'hooks' => [
-        'page.update:before' => function (Page $site, array $values, array $strings) {
+        'page.update:before' => function (Page|null $page, array $values, array $strings) {
             if (env('KIRBY_DEBUG', false) === false) {
                 throw new Exception('You cannot save changes to the playground content, you can only make local changes as a preview.');
             }
