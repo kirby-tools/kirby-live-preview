@@ -19,6 +19,8 @@ columns:
       preview:
         label: Site Preview
         type: preview
+        help: |
+          Tip: Clicking menu items will take you to the corresponding page in the Panel.
 
   - width: 1/2
     sections:
