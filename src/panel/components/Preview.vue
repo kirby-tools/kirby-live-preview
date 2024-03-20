@@ -193,7 +193,7 @@ async function handleMessage({ data }) {
       return;
     }
 
-    let path = getNonLocalizedPath(url.pathname).slice(1);
+    let path = getNonLocalizedPath(url).slice(1);
 
     if (path) {
       // Replace Kirby path parameters, like `notes/tag:sky`
