@@ -63,6 +63,14 @@ watch(
   { deep: true },
 );
 
+watch(
+  // Will be `null` in single language setups
+  () => panel.language.code,
+  () => {
+    throttledRenderPreview(unsavedContent.value);
+  },
+);
+
 (async () => {
   const { load } = useSection();
   const response = await load({
@@ -120,7 +128,6 @@ async function renderPreview(content, { persistScrollPosition = true } = {}) {
       id,
       content,
       pointerEvents: pointerEvents.value,
-      language: panel.language.code,
     });
 
     const lastBlobUrl = blobUrl.value;
