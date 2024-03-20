@@ -13,6 +13,7 @@ import {
 import throttle from "throttleit";
 import { joinURL, withLeadingSlash } from "ufo";
 import { section } from "kirbyuse/props";
+import { useLocale } from "../composables";
 import { LOG_LEVELS } from "../constants";
 
 const propsDefinition = {
@@ -30,6 +31,7 @@ const props = defineProps(propsDefinition);
 const panel = usePanel();
 const api = useApi();
 const store = useStore();
+const { getNonLocalizedPath } = useLocale();
 
 // Section props
 const label = ref();
@@ -191,7 +193,7 @@ async function handleMessage({ data }) {
       return;
     }
 
-    let path = url.pathname.slice(1);
+    let path = getNonLocalizedPath(url.pathname).slice(1);
 
     if (path) {
       // Replace Kirby path parameters, like `notes/tag:sky`
