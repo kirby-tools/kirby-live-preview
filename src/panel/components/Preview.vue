@@ -141,30 +141,25 @@ async function renderPreview(content, { persistScrollPosition = true } = {}) {
     const blob = new Blob([result.html], { type: "text/html" });
     blobUrl.value = URL.createObjectURL(blob);
 
-    // Restore scroll position
-    if (scrollPosition && persistScrollPosition) {
-      await nextTick();
-      await new Promise((resolve) => {
-        iframe.value.addEventListener(
-          "load",
-          () => {
+    // Wait for the iframe to render
+    await nextTick();
+    await new Promise((resolve) => {
+      iframe.value.addEventListener(
+        "load",
+        () => {
+          // Restore scroll position
+          if (scrollPosition && persistScrollPosition) {
             iframe.value.contentWindow.scrollTo(0, scrollPosition);
-            resolve();
-          },
-          { once: true },
-        );
-      });
-    }
+          }
+          resolve();
+        },
+        { once: true },
+      );
+    });
 
     showTransitionIframe.value = false;
     hasError.value = false;
     transitionBlobUrl.value = blobUrl.value;
-
-    // Wait for the transition iframe to load
-    await nextTick();
-    await new Promise((resolve) => {
-      transitionIframe.value.addEventListener("load", resolve, { once: true });
-    });
 
     // Revoke the previous blob URL to free up memory
     if (lastBlobUrl) {
