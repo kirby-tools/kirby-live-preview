@@ -1,6 +1,6 @@
 # Kirby Live Preview Plugin License Agreement
 
-Published: 2024-01-22
+Published: 2024-03-21
 
 ## About this License Agreement
 
