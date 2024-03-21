@@ -41,10 +41,12 @@ const help = ref();
 const logLevel = ref();
 // Local data
 const isRendering = ref(false);
+const showTransitionIframe = ref(false);
 const hasError = ref(false);
 const blobUrl = ref();
 const transitionBlobUrl = ref();
 const containerRect = ref({});
+// Element refs
 const container = ref();
 const iframe = ref();
 const transitionIframe = ref();
@@ -113,6 +115,7 @@ onBeforeUnmount(() => {
 
 async function renderPreview(content, { persistScrollPosition = true } = {}) {
   if (isRendering.value) return;
+  isRendering.value = true;
 
   const id = panel.view.path.startsWith("pages/")
     ? panel.view.path.slice(6).replace(/\+/g, "/")
@@ -125,7 +128,7 @@ async function renderPreview(content, { persistScrollPosition = true } = {}) {
     transitionIframe.value?.contentWindow?.scrollTo(0, scrollPosition);
   }
 
-  isRendering.value = true;
+  showTransitionIframe.value = true;
 
   try {
     const { result } = await api.post("__live-preview__/render", {
@@ -153,12 +156,15 @@ async function renderPreview(content, { persistScrollPosition = true } = {}) {
       });
     }
 
-    // Wait just a bit to let images load
-    await new Promise((resolve) => setTimeout(resolve, 50));
-
-    isRendering.value = false;
+    showTransitionIframe.value = false;
     hasError.value = false;
     transitionBlobUrl.value = blobUrl.value;
+
+    // Wait for the transition iframe to load
+    await nextTick();
+    await new Promise((resolve) => {
+      transitionIframe.value.addEventListener("load", resolve, { once: true });
+    });
 
     // Revoke the previous blob URL to free up memory
     if (lastBlobUrl) {
@@ -167,6 +173,8 @@ async function renderPreview(content, { persistScrollPosition = true } = {}) {
   } catch (error) {
     console.error(error);
     hasError.value = true;
+    showTransitionIframe.value = false;
+  } finally {
     isRendering.value = false;
   }
 }
@@ -268,7 +276,8 @@ async function handleMessage({ data }) {
         :src="blobUrl"
         class="klp-h-full klp-w-full klp-rounded-[var(--input-rounded)]"
         :class="[
-          (isRendering || hasError) && 'klp-pointer-events-none klp-opacity-0',
+          (showTransitionIframe || hasError) &&
+            'klp-pointer-events-none klp-opacity-0',
         ]"
         :style="{
           gridArea: '1 / 1 / 1 / 1',
