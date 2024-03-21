@@ -2,6 +2,9 @@ title: Photos
 
 icon: 🖼
 
+options:
+  preview: https://kirby.tools/live-preview
+
 sections:
   drafts:
     extends: sections/albums

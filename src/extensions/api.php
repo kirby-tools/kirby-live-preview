@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Exception\NotFoundException;
 use Kirby\Form\Form;
 use Kirby\Http\Response;
 
@@ -36,6 +37,11 @@ return [
 
                 // Inject script to catch all links and send them to the parent window
                 $plugin = $kirby->plugin('johannschopplich/live-preview');
+
+                if (!$plugin) {
+                    throw new NotFoundException('Plugin assets not found');
+                }
+
                 $scriptUrl = $plugin->asset('iframe.js')->url();
 
                 $script = '<script type="module" src="' . $scriptUrl . '"></script>';

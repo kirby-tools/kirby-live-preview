@@ -1,5 +1,8 @@
+options:
+  preview: https://kirby.tools/live-preview
+
 columns:
-  - width: 1/1
+  - width: 2/3
     fields:
       infoGettingStarted:
         label: Kirby Starterkit + Live Preview
@@ -13,6 +16,14 @@ columns:
           - **Panel redirects**: Site links in the preview will open the corresponding page in the Panel.
           - **Section behavior**: Place the preview section where you need it. It will match the surrounding layout.
         theme: positive
+  - width: 1/3
+    fields:
+      infoDocumentation:
+        label: 🛍️ Convinced? Grab a copy!
+        type: info
+        theme: passive
+        text: |
+          Purchase a copy of <a href="https://kirby.tools/live-preview">Kirby Live Preview</a> to preview all content changes right in the Panel.
 
   - width: 1/1
     sections:

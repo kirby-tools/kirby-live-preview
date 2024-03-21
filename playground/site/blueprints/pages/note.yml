@@ -15,6 +15,9 @@ status:
     label: Published
     text: The note is online and listed in the blog
 
+options:
+  preview: https://kirby.tools/live-preview
+
 columns:
   - width: 1/2
     sticky: true

@@ -6,6 +6,9 @@ status:
   draft: true
   listed: true
 
+options:
+  preview: https://kirby.tools/live-preview
+
 columns:
   - width: 1/3
     sections:

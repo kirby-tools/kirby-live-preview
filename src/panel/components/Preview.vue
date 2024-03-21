@@ -98,11 +98,13 @@ watch(
   }
 
   window.addEventListener("message", handleMessage);
+  panel.events.on("page.changeTitle", renderUnsavedContent);
 })();
 
 onBeforeUnmount(() => {
   window.removeEventListener("resize", updateSectionHeight);
   window.removeEventListener("message", handleMessage);
+  panel.events.off("page.changeTitle", renderUnsavedContent);
 
   if (blobUrl.value) {
     URL.revokeObjectURL(blobUrl.value);
@@ -178,6 +180,10 @@ function updateSectionHeight() {
   containerRect.value = container.value.getBoundingClientRect();
 }
 
+function renderUnsavedContent(options) {
+  throttledRenderPreview(unsavedContent.value, options);
+}
+
 async function handleMessage({ data }) {
   if (data.type === "link") {
     const url = new URL(data.href);
@@ -224,7 +230,7 @@ async function handleMessage({ data }) {
         size="xs"
         icon="live-preview-restart"
         @click="
-          throttledRenderPreview(unsavedContent, {
+          renderUnsavedContent({
             persistScrollPosition: false,
           })
         "
@@ -281,7 +287,7 @@ async function handleMessage({ data }) {
           icon="alert"
           :text="panel.t('johannschopplich.preview.error.render')"
           @click="
-            throttledRenderPreview(unsavedContent, {
+            renderUnsavedContent({
               persistScrollPosition: false,
             })
           "
