@@ -6,7 +6,7 @@ Thank you for purchasing Kirby Live Preview. We are glad to have you on board an
 
 ## Getting Started
 
-To get started, please refer to the [documentation](https://kirby.tools/docs/getting-started) for guidance on installation, configuration, and usage.
+To get started, please refer to the [documentation](https://kirby.tools/docs/live-preview) for guidance on installation, configuration, and usage.
 
 ## Support and Questions
 
