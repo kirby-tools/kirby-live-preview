@@ -1,11 +1,11 @@
 <?php
 
+use Kirby\Cms\App;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Form;
-use Kirby\Http\Response;
 
 return [
-    'routes' => fn (\Kirby\Cms\App $kirby) => [
+    'routes' => fn (App $kirby) => [
         [
             'pattern' => '__live-preview__/render',
             'method' => 'POST',
@@ -17,10 +17,7 @@ return [
                 $page = $kirby->page($id);
 
                 if (!$page) {
-                    return Response::json([
-                        'code' => 404,
-                        'status' => 'Not Found'
-                    ], 404);
+                    throw new NotFoundException('Page not found');
                 }
 
                 $form = Form::for($page, [
@@ -74,13 +71,9 @@ return [
 
                 $html = $dom->saveHTML();
 
-                return Response::json([
-                    'code' => 200,
-                    'status' => 'OK',
-                    'result' => [
-                        'html' => $html
-                    ]
-                ], 200);
+                return [
+                    'html' => $html
+                ];
             }
         ]
     ]

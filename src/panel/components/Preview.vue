@@ -131,14 +131,14 @@ async function renderPreview(content, { persistScrollPosition = true } = {}) {
   showTransitionIframe.value = true;
 
   try {
-    const { result } = await api.post("__live-preview__/render", {
+    const { html } = await api.post("__live-preview__/render", {
       id,
       content,
       interactable: interactable.value,
     });
 
     const lastBlobUrl = blobUrl.value;
-    const blob = new Blob([result.html], { type: "text/html" });
+    const blob = new Blob([html], { type: "text/html" });
     blobUrl.value = URL.createObjectURL(blob);
 
     // Wait for the iframe to render
