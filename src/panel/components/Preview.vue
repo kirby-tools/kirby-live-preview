@@ -240,7 +240,6 @@ async function handleMessage({ data }) {
       />
     </k-button-group>
 
-    <!-- klp-border klp-border-dashed klp-border-[var(--color-gray-300)] -->
     <div
       ref="container"
       class="klp-grid klp-min-h-[55dvh] klp-rounded-[var(--input-rounded)]"
