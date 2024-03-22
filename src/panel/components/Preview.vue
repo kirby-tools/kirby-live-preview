@@ -10,7 +10,7 @@ import {
   useStore,
   watch,
 } from "kirbyuse";
-import pThrottle from "p-throttle";
+import throttle from "throttleit";
 import { joinURL, withLeadingSlash } from "ufo";
 import { section } from "kirbyuse/props";
 import { useLocale } from "../composables";
@@ -32,10 +32,6 @@ const panel = usePanel();
 const api = useApi();
 const store = useStore();
 const { getNonLocalizedPath } = useLocale();
-const throttle = pThrottle({
-  limit: 1,
-  interval: 250,
-});
 
 // Section props
 const label = ref();
@@ -60,7 +56,7 @@ const transitionIframe = ref();
 
 const unsavedContent = computed(() => store.getters["content/changes"]());
 
-const throttledRenderPreview = throttle(renderPreview);
+const throttledRenderPreview = throttle(renderPreview, 250);
 watch(
   unsavedContent,
   (newValue, oldValue) => {
