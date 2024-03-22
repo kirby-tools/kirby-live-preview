@@ -13,7 +13,7 @@ return [
                 $request = $kirby->request();
                 $id = $request->get('id', $kirby->site()->homePageId());
                 $content = $request->get('content', []);
-                $pointerEvents = $request->get('pointerEvents', true);
+                $interactable = $request->get('interactable', true);
                 $page = $kirby->page($id);
 
                 if (!$page) {
@@ -48,7 +48,7 @@ return [
                 $html = str_replace('</body>', $script . '</body>', $html);
 
                 // If pointer events are disabled, update the document styles
-                if (!$pointerEvents) {
+                if (!$interactable) {
                     $html = str_replace(
                         '</head>',
                         '<style>* { pointer-events: none !important; }</style></head>',

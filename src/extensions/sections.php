@@ -7,7 +7,7 @@ return [
     'preview' => [
         'props' => [
             'label' => fn ($label = null) => I18n::translate($label, $label),
-            'pointerEvents' => fn ($pointerEvents = true) => $pointerEvents !== false,
+            'interactable' => fn ($interactable = true) => $interactable !== false,
             'aspectRatio' => function ($aspectRatio = null) {
                 if (is_string($aspectRatio) && !preg_match('!^\d+\/\d+$!', $aspectRatio)) {
                     throw new InvalidArgumentException('Invalid aspect ratio');

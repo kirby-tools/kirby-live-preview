@@ -35,7 +35,7 @@ const { getNonLocalizedPath } = useLocale();
 
 // Section props
 const label = ref();
-const pointerEvents = ref();
+const interactable = ref();
 const aspectRatio = ref();
 const help = ref();
 const logLevel = ref();
@@ -82,7 +82,7 @@ watch(
     name: props.name,
   });
   label.value = t(response.label) || panel.t("johannschopplich.preview.label");
-  pointerEvents.value = response.pointerEvents;
+  interactable.value = response.interactable;
   aspectRatio.value = response.aspectRatio || undefined;
   help.value = response.help;
   logLevel.value = LOG_LEVELS.indexOf(response.logLevel);
@@ -134,7 +134,7 @@ async function renderPreview(content, { persistScrollPosition = true } = {}) {
     const { result } = await api.post("__live-preview__/render", {
       id,
       content,
-      pointerEvents: pointerEvents.value,
+      interactable: interactable.value,
     });
 
     const lastBlobUrl = blobUrl.value;
