@@ -44,17 +44,35 @@ return [
 
                 $scriptUrl = $plugin->asset('iframe.js')->url();
 
-                $script = '<script type="module" src="' . $scriptUrl . '"></script>';
-                $html = str_replace('</body>', $script . '</body>', $html);
+                $dom = new \DOMDocument();
+                @$dom->loadHTML($html);
+
+                $body = $dom->getElementsByTagName('body')->item(0);
+                $script = $dom->createElement('script');
+                $script->setAttribute('type', 'module');
+                $script->setAttribute('src', $scriptUrl);
+                $body->appendChild($script);
+
+                $head = $dom->getElementsByTagName('head')->item(0);
+
+                if (!$head) {
+                    throw new NotFoundException('Head tag not found');
+                }
+
+                // Inject `<base>` tag for relative URLs
+                if (!$head->getElementsByTagName('base')->length) {
+                    $base = $dom->createElement('base');
+                    $base->setAttribute('href', $kirby->site()->url($kirby->languageCode()));
+                    $head->insertBefore($base, $head->firstChild);
+                }
 
                 // If pointer events are disabled, update the document styles
                 if (!$interactable) {
-                    $html = str_replace(
-                        '</head>',
-                        '<style>* { pointer-events: none !important; }</style></head>',
-                        $html
-                    );
+                    $style = $dom->createElement('style', '* { pointer-events: none !important; }');
+                    $head->appendChild($style);
                 }
+
+                $html = $dom->saveHTML();
 
                 return Response::json([
                     'code' => 200,
