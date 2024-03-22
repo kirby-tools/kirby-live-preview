@@ -118,7 +118,7 @@ async function renderPreview(content, { persistScrollPosition = true } = {}) {
   isRendering.value = true;
 
   const id = panel.view.path.startsWith("pages/")
-    ? panel.view.path.slice(6).replace(/\+/g, "/")
+    ? panel.view.path.slice(6).replaceAll("+", "/")
     : undefined;
   let scrollPosition = 0;
 
