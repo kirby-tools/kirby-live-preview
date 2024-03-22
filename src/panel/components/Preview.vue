@@ -10,7 +10,7 @@ import {
   useStore,
   watch,
 } from "kirbyuse";
-import throttle from "throttleit";
+import pThrottle from "p-throttle";
 import { joinURL, withLeadingSlash } from "ufo";
 import { section } from "kirbyuse/props";
 import { useLocale } from "../composables";
@@ -32,6 +32,10 @@ const panel = usePanel();
 const api = useApi();
 const store = useStore();
 const { getNonLocalizedPath } = useLocale();
+const throttle = pThrottle({
+  limit: 1,
+  interval: 250,
+});
 
 // Section props
 const label = ref();
@@ -56,7 +60,7 @@ const transitionIframe = ref();
 
 const unsavedContent = computed(() => store.getters["content/changes"]());
 
-const throttledRenderPreview = throttle(renderPreview, 250);
+const throttledRenderPreview = throttle(renderPreview);
 watch(
   unsavedContent,
   (newValue, oldValue) => {
@@ -71,7 +75,7 @@ watch(
   // Will be `null` in single language setups
   () => panel.language.code,
   () => {
-    throttledRenderPreview(unsavedContent.value);
+    renderUnsavedContent();
   },
 );
 
@@ -174,11 +178,6 @@ async function renderPreview(content, { persistScrollPosition = true } = {}) {
   }
 }
 
-function t(value) {
-  if (!value || typeof value === "string") return value;
-  return value[panel.translation.code] ?? Object.values(value)[0];
-}
-
 function updateSectionHeight() {
   containerRect.value = container.value.getBoundingClientRect();
 }
@@ -222,6 +221,11 @@ async function handleMessage({ data }) {
       console.error(error);
     }
   }
+}
+
+function t(value) {
+  if (!value || typeof value === "string") return value;
+  return value[panel.translation.code] ?? Object.values(value)[0];
 }
 </script>
 
