@@ -246,7 +246,8 @@ async function handleMessage({ data }) {
       class="klp-grid klp-min-h-[55dvh] klp-rounded-[var(--input-rounded)]"
       :class="[
         isRendering && 'klp-pointer-events-none',
-        blobUrl && !hasError && 'k-shadow-md',
+        // Show the shadow only after the main iframe is loaded
+        transitionBlobUrl && !hasError && 'k-shadow-md',
       ]"
       :style="{
         aspectRatio,
