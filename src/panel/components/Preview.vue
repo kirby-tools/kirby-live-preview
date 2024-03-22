@@ -207,7 +207,7 @@ async function handleMessage({ data }) {
     if (path) {
       // Replace Kirby path parameters, like `notes/tag:sky`
       path = path.replace(/\/[^\/]+?:.+$/, "");
-      path = joinURL("pages", path.replace(/\//g, "+"));
+      path = joinURL("pages", path.replaceAll("/", "+"));
     } else {
       path = "site";
     }
