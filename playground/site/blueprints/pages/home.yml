@@ -3,7 +3,7 @@ title: Home
 icon: 🏠
 
 options:
-  preview: https://kirby.tools/live-preview
+  preview: https://kirby.tools/live-preview#pricing
   changeStatus: false
 
 columns:
