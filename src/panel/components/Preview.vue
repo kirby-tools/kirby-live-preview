@@ -259,7 +259,7 @@ async function handleMessage({ data }) {
         v-if="transitionBlobUrl"
         ref="transitionIframe"
         :src="transitionBlobUrl"
-        class="klp-h-full klp-w-full klp-rounded-[var(--input-rounded)]"
+        class="klp-h-full klp-w-full klp-rounded-[var(--input-rounded)] klp-bg-white"
         :class="[hasError && 'klp-pointer-events-none klp-opacity-0']"
         :style="{
           gridArea: '1 / 1 / 1 / 1',
@@ -269,7 +269,7 @@ async function handleMessage({ data }) {
         v-if="blobUrl"
         ref="iframe"
         :src="blobUrl"
-        class="klp-h-full klp-w-full klp-rounded-[var(--input-rounded)]"
+        class="klp-h-full klp-w-full klp-rounded-[var(--input-rounded)] klp-bg-white"
         :class="[
           (showTransitionIframe || hasError) &&
             'klp-pointer-events-none klp-opacity-0',
