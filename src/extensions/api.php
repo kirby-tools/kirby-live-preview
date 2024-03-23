@@ -41,8 +41,12 @@ return [
 
                 $scriptUrl = $plugin->asset('iframe.js')->url();
 
+                // Before loading HTML, enable libxml error handling
+                libxml_use_internal_errors(true);
+
                 $dom = new \DOMDocument();
-                @$dom->loadHTML($html);
+                // Fix encoding issue by specifying UTF-8 encoding
+                $dom->loadHTML('<?xml encoding="utf-8">' . $html);
 
                 $body = $dom->getElementsByTagName('body')->item(0);
                 $script = $dom->createElement('script');
@@ -70,6 +74,11 @@ return [
                 }
 
                 $html = $dom->saveHTML();
+
+                // Clear the libxml error buffer
+                libxml_clear_errors();
+                // Restore the previous state of libxml error handling
+                libxml_use_internal_errors(false);
 
                 return [
                     'html' => $html
