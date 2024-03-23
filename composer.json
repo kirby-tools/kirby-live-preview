@@ -2,7 +2,7 @@
   "name": "johannschopplich/kirby-live-preview",
   "description": "Preview all content changes right in the Panel",
   "type": "kirby-plugin",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "keywords": [
     "content",
     "kirby",
