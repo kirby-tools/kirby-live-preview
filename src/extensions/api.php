@@ -3,6 +3,7 @@
 use Kirby\Cms\App;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Form;
+use Kirby\Toolkit\Dom;
 
 return [
     'routes' => fn (App $kirby) => [
@@ -15,9 +16,14 @@ return [
                 $content = $request->get('content', []);
                 $interactable = $request->get('interactable', true);
                 $page = $kirby->page($id);
+                $plugin = $kirby->plugin('johannschopplich/live-preview');
 
                 if (!$page) {
                     throw new NotFoundException('Page not found');
+                }
+
+                if (!$plugin) {
+                    throw new NotFoundException('Plugin assets not found');
                 }
 
                 $form = Form::for($page, [
@@ -29,56 +35,54 @@ return [
                 // Clone the page to inject the new (unsaved) content
                 $page = $page->clone();
                 $page->content()->update($form->strings());
+                $page->content()->update(['previewmode' => true]);
 
+                // Find all `writer` fields
+                $writerFields = array_filter(
+                    $page->blueprint()->fields(),
+                    fn ($field) => $field['type'] === 'writer'
+                );
+
+                // Replace all permalinks with a resolved URL to allow for
+                // preview to Panel page redirects
+                foreach (array_keys($writerFields) as $key) {
+                    $field = $page->content()->get($key);
+                    $field->permalinksToUrls();
+                    $page->content()->update([
+                        $key => $field->value()
+                    ]);
+                }
+
+                // Render the page as HTML
                 $html = $page->render();
 
+                $dom = new Dom($html);
+                $html = $dom->document()->documentElement;
+                $head = $dom->query('/html/head')[0];
+
+                // Add `data-preview-mode` attribute to the root element
+                $html->setAttribute('data-preview-mode', 'true');
+
                 // Inject script to catch all links and send them to the parent window
-                $plugin = $kirby->plugin('johannschopplich/live-preview');
-
-                if (!$plugin) {
-                    throw new NotFoundException('Plugin assets not found');
-                }
-
-                $scriptUrl = $plugin->asset('iframe.js')->url();
-
-                // Before loading HTML, enable libxml error handling
-                libxml_use_internal_errors(true);
-
-                $dom = new \DOMDocument();
-                // Fix encoding issue by specifying UTF-8 encoding
-                $dom->loadHTML('<?xml encoding="utf-8">' . $html);
-
-                $body = $dom->getElementsByTagName('body')->item(0);
-                $script = $dom->createElement('script');
+                $script = $dom->document()->createElement('script');
                 $script->setAttribute('type', 'module');
-                $script->setAttribute('src', $scriptUrl);
-                $body->appendChild($script);
-
-                $head = $dom->getElementsByTagName('head')->item(0);
-
-                if (!$head) {
-                    throw new NotFoundException('Head tag not found');
-                }
+                $script->setAttribute('src', $plugin->asset('iframe.js')->url());
+                $dom->body()->appendChild($script);
 
                 // Inject `<base>` tag for relative URLs
                 if (!$head->getElementsByTagName('base')->length) {
-                    $base = $dom->createElement('base');
+                    $base = $dom->document()->createElement('base');
                     $base->setAttribute('href', $kirby->site()->url($kirby->languageCode()));
                     $head->insertBefore($base, $head->firstChild);
                 }
 
-                // If pointer events are disabled, update the document styles
+                // If iframe interactions are disabled, overwrite pointer events
                 if (!$interactable) {
-                    $style = $dom->createElement('style', '* { pointer-events: none !important; }');
+                    $style = $dom->document()->createElement('style', '* { pointer-events: none !important; }');
                     $head->appendChild($style);
                 }
 
-                $html = $dom->saveHTML();
-
-                // Clear the libxml error buffer
-                libxml_clear_errors();
-                // Restore the previous state of libxml error handling
-                libxml_use_internal_errors(false);
+                $html = $dom->toString();
 
                 return [
                     'html' => $html
