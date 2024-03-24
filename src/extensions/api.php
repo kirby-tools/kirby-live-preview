@@ -47,7 +47,7 @@ return [
                 // preview to Panel page redirects
                 foreach (array_keys($writerFields) as $key) {
                     $field = $page->content()->get($key);
-                    $field->permalinksToUrls();
+                    $field = $field->permalinksToUrls();
                     $page->content()->update([
                         $key => $field->value()
                     ]);
