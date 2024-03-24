@@ -57,11 +57,10 @@ return [
                 $html = $page->render();
 
                 $dom = new Dom($html);
-                $html = $dom->document()->documentElement;
                 $head = $dom->query('/html/head')[0];
 
                 // Add `data-preview-mode` attribute to the root element
-                $html->setAttribute('data-preview-mode', 'true');
+                $dom->document()->documentElement->setAttribute('data-preview-mode', 'true');
 
                 // Inject script to catch all links and send them to the parent window
                 $script = $dom->document()->createElement('script');
@@ -82,10 +81,8 @@ return [
                     $head->appendChild($style);
                 }
 
-                $html = $dom->toString();
-
                 return [
-                    'html' => $html
+                    'html' => $dom->toString()
                 ];
             }
         ]

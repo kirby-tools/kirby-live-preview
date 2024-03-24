@@ -183,6 +183,11 @@ function renderUnsavedContent(options) {
 }
 
 async function handleMessage({ data }) {
+  if (data.type === "save") {
+    panel.events.emit(`${panel.context}.save`);
+    return;
+  }
+
   if (data.type === "link") {
     const url = new URL(data.href);
 
