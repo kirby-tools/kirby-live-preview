@@ -35,6 +35,7 @@ const { getNonLocalizedPath } = useLocale();
 
 // Section props
 const label = ref();
+const updateInterval = ref();
 const interactable = ref();
 const aspectRatio = ref();
 const help = ref();
@@ -53,14 +54,18 @@ const transitionIframe = ref();
 
 // Non-reactive data
 // let storageKey;
+let throttledRenderPreview;
 
 const unsavedContent = computed(() => store.getters["content/changes"]());
 
-const throttledRenderPreview = throttle(renderPreview, 250);
 watch(
   unsavedContent,
   (newValue, oldValue) => {
-    if (JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
+    if (
+      throttledRenderPreview &&
+      updateInterval.value !== false &&
+      JSON.stringify(newValue) !== JSON.stringify(oldValue)
+    ) {
       throttledRenderPreview(newValue);
     }
   },
@@ -82,14 +87,18 @@ watch(
     name: props.name,
   });
   label.value = t(response.label) || panel.t("johannschopplich.preview.label");
+  updateInterval.value = response.updateInterval;
   interactable.value = response.interactable;
   aspectRatio.value = response.aspectRatio || undefined;
   help.value = response.help;
   logLevel.value = LOG_LEVELS.indexOf(response.logLevel);
   // storageKey = getHashedStorageKey(panel.view.path);
 
-  // Lazily load the preview
-  renderPreview(unsavedContent.value);
+  // Update interval can be `false`, so we use the default value of `250`
+  throttledRenderPreview = throttle(renderPreview, updateInterval.value || 250);
+
+  // Lazily render the preview
+  renderUnsavedContent();
 
   // Equals the `mounted` lifecycle hook
   await nextTick();
@@ -112,6 +121,14 @@ onBeforeUnmount(() => {
     URL.revokeObjectURL(blobUrl.value);
   }
 });
+
+function updateSectionHeight() {
+  containerRect.value = container.value.getBoundingClientRect();
+}
+
+function renderUnsavedContent(options) {
+  throttledRenderPreview?.(unsavedContent.value, options);
+}
 
 async function renderPreview(content, { persistScrollPosition = true } = {}) {
   if (isRendering.value) return;
@@ -174,14 +191,6 @@ async function renderPreview(content, { persistScrollPosition = true } = {}) {
   }
 }
 
-function updateSectionHeight() {
-  containerRect.value = container.value.getBoundingClientRect();
-}
-
-function renderUnsavedContent(options) {
-  throttledRenderPreview(unsavedContent.value, options);
-}
-
 async function handleMessage({ data }) {
   if (data.type === "save") {
     panel.events.emit(`${panel.context}.save`);
@@ -237,11 +246,7 @@ function t(value) {
         variant="filled"
         size="xs"
         icon="live-preview-restart"
-        @click="
-          renderUnsavedContent({
-            persistScrollPosition: false,
-          })
-        "
+        @click="renderUnsavedContent()"
       />
     </k-button-group>
 
@@ -250,8 +255,9 @@ function t(value) {
       class="klp-grid klp-min-h-[55dvh] klp-rounded-[var(--input-rounded)]"
       :class="[
         isRendering && 'klp-pointer-events-none',
-        // Show the shadow only after the main iframe is loaded
         transitionBlobUrl && !hasError && 'k-shadow-md',
+        (!transitionBlobUrl || hasError) &&
+          'klp-border klp-border-dashed klp-border-[var(--color-gray-400)]',
       ]"
       :style="{
         aspectRatio,
@@ -259,6 +265,7 @@ function t(value) {
           ? 'auto'
           : `calc(100dvh - ${containerRect.top ?? 0}px - var(--spacing-3))`,
       }"
+      data-theme="passive"
     >
       <iframe
         v-if="transitionBlobUrl"
@@ -285,7 +292,7 @@ function t(value) {
       />
       <div
         v-if="hasError"
-        class="klp-flex klp-items-center klp-justify-center klp-rounded-[var(--input-rounded)] klp-border klp-border-dashed klp-border-[var(--color-gray-400)]"
+        class="klp-flex klp-items-center klp-justify-center"
         :style="{
           gridArea: '1 / 1 / 1 / 1',
         }"

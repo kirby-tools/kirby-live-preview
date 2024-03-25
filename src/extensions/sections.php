@@ -7,6 +7,17 @@ return [
     'preview' => [
         'props' => [
             'label' => fn ($label = null) => I18n::translate($label, $label),
+            'updateInterval' => function ($updateInterval = 250) {
+                if ($updateInterval === false) {
+                    return false;
+                }
+
+                if (!is_int($updateInterval) || $updateInterval < 0) {
+                    throw new InvalidArgumentException('Invalid update interval');
+                }
+
+                return max($updateInterval, 250);
+            },
             'interactable' => fn ($interactable = true) => $interactable !== false,
             'aspectRatio' => function ($aspectRatio = null) {
                 if (is_string($aspectRatio) && !preg_match('!^\d+\/\d+$!', $aspectRatio)) {
