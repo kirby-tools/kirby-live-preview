@@ -110,12 +110,14 @@ watch(
 
   window.addEventListener("message", handleMessage);
   panel.events.on("page.changeTitle", renderUnsavedContent);
+  panel.events.on("file.sort", renderUnsavedContent);
 })();
 
 onBeforeUnmount(() => {
   window.removeEventListener("resize", updateSectionHeight);
   window.removeEventListener("message", handleMessage);
   panel.events.off("page.changeTitle", renderUnsavedContent);
+  panel.events.off("file.sort", renderUnsavedContent);
 
   if (blobUrl.value) {
     URL.revokeObjectURL(blobUrl.value);

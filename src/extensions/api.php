@@ -69,7 +69,7 @@ return [
                 $dom->body()->appendChild($script);
 
                 // Inject `<base>` tag for relative URLs
-                if (!$head->getElementsByTagName('base')->length) {
+                if ($head->getElementsByTagName('base')->length === 0) {
                     $base = $dom->document()->createElement('base');
                     $base->setAttribute('href', $kirby->site()->url($kirby->languageCode()));
                     $head->insertBefore($base, $head->firstChild);
