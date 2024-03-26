@@ -13,7 +13,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier \"src/panel/**\" --write",
     "archive": "pnpm run build && pnpm run build:assets && git archive --format=zip --output=./kirby-live-preview-$(git describe --tags).zip HEAD",
-    "release": "bumpp --all"
+    "release": "pnpm run archive && bumpp --all"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.8.3",
