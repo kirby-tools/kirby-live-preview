@@ -1,0 +1,1 @@
+document.addEventListener("click",e=>{let t=e.target.closest("a");t?.href&&(e.preventDefault(),window.parent.postMessage({type:"link",href:t.href},"*"))});document.addEventListener("keydown",e=>{e.key==="s"&&(e.metaKey||e.ctrlKey)&&(e.preventDefault(),window.parent.postMessage({type:"save"},"*"))});
