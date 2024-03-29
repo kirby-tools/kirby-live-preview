@@ -2,7 +2,7 @@
 
 ## Welcome!
 
-Thank you for purchasing Kirby Live Preview. We are glad to have you on board and hope you will enjoy reviewing all the content changes right in the Panel.
+Thank you for purchasing Kirby Live Preview. We are glad to have you on board and hope you will enjoy reviewing all the content changes right from the Kirby Panel.
 
 ## Getting Started
 
