@@ -23,7 +23,7 @@ columns:
         type: info
         theme: passive
         text: |
-          Purchase a copy of <a href="https://kirby.tools/live-preview">Kirby Live Preview</a> to preview all content changes right in the Panel.
+          Purchase a copy of <a href="https://kirby.tools/live-preview">Kirby Live Preview</a> for a real-time page preview in the Kirby Panel.
 
   - width: 1/1
     sections:

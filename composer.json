@@ -1,6 +1,6 @@
 {
   "name": "johannschopplich/kirby-live-preview",
-  "description": "Preview all content changes right in the Panel",
+  "description": "Real-time page preview in the Panel",
   "type": "kirby-plugin",
   "version": "1.2.1",
   "keywords": [
