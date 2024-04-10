@@ -12,8 +12,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier \"src/panel/**\" --write",
-    "archive": "git archive --format=zip --output=./kirby-live-preview-$(git describe --tags).zip HEAD",
-    "release": "pnpm run build && pnpm run build:assets && bumpp --all && pnpm run archive"
+    "release": "pnpm run build && pnpm run build:assets && bumpp --all --execute \"npx zx scripts/pre-release.mjs\" && zx scripts/post-release.mjs"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.8.3",
@@ -30,6 +29,7 @@
     "tailwindcss": "^3.4.1",
     "throttleit": "^2.0.0",
     "ufo": "^1.5.2",
-    "vite": "^5.1.6"
+    "vite": "^5.1.6",
+    "zx": "^8.0.1"
   }
 }
