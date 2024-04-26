@@ -3,6 +3,11 @@ document.addEventListener("click", (event) => {
   const link = event.target.closest("a");
 
   if (link?.href) {
+    // Ignore same-page links
+    if (link.href === window.location.href) {
+      return;
+    }
+
     event.preventDefault();
     window.parent.postMessage(
       {
