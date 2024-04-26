@@ -10,6 +10,6 @@ return [
     'panel' => [
         'css' => 'assets/panel.css',
         'favicon' => 'favicon.ico',
-        'frameAncestors' => ['https://kirby.tools']
+        'frameAncestors' => ['https://kirby.tools', 'self']
     ]
 ];
