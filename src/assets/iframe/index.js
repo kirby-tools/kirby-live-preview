@@ -3,8 +3,15 @@ document.addEventListener("click", (event) => {
   const link = event.target.closest("a");
 
   if (link?.href) {
-    // Ignore same-page links
-    if (link.href === window.location.href) {
+    const url = new URL(link.href);
+
+    // Ignore links with the same path
+    if (url.pathname === location.pathname) {
+      return;
+    }
+
+    // Ignore links that contain a `data-preview-ignore` attribute
+    if (link.dataset.previewIgnore !== undefined) {
       return;
     }
 
