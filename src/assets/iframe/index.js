@@ -3,7 +3,11 @@ document.addEventListener("click", (event) => {
   const link = event.target.closest("a");
 
   if (link?.href) {
-    const url = new URL(link.href);
+    const url = tryParseUrl(link.href);
+
+    if (!url) {
+      return;
+    }
 
     // Ignore links with the same path
     if (url.pathname === location.pathname) {
@@ -38,3 +42,11 @@ document.addEventListener("keydown", (event) => {
     );
   }
 });
+
+function tryParseUrl(url) {
+  try {
+    return new URL(url);
+  } catch {
+    return undefined;
+  }
+}
