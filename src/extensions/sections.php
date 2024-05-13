@@ -28,6 +28,9 @@ return [
             },
             'help' => fn ($help = null) => I18n::translate($help, $help),
             'logLevel' => fn ($logLevel = null) => in_array($logLevel, ['error', 'warn', 'info', 'debug'], true) ? $logLevel : 'warn'
-        ]
-    ]
+        ],
+        'computed' => [
+            'help' => fn () => $this->help ? $this->kirby()->kirbytext($this->model()->toSafeString($this->help)) : null
+        ],
+    ],
 ];
