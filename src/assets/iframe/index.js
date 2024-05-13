@@ -9,8 +9,8 @@ document.addEventListener("click", (event) => {
       return;
     }
 
-    // Ignore links with the same path
-    if (url.pathname === location.pathname) {
+    // Ignore links containing a hash
+    if (url.hash) {
       return;
     }
 

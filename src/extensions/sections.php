@@ -31,6 +31,6 @@ return [
         ],
         'computed' => [
             'help' => fn () => $this->help ? $this->kirby()->kirbytext($this->model()->toSafeString($this->help)) : null
-        ],
-    ],
+        ]
+    ]
 ];
