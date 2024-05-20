@@ -266,6 +266,7 @@ function t(value) {
         height: aspectRatio
           ? 'auto'
           : `calc(100dvh - ${containerRect.top ?? 0}px - var(--spacing-3))`,
+        maxWidth: '100%',
       }"
       data-theme="passive"
     >
