@@ -10,9 +10,10 @@ import {
   useStore,
   watch,
 } from "kirbyuse";
+import { section } from "kirbyuse/props";
 import throttle from "throttleit";
 import { joinURL, withLeadingSlash } from "ufo";
-import { section } from "kirbyuse/props";
+import { useLicense } from "@kirby-tools/licensing";
 import { useLocale } from "../composables";
 import { LOG_LEVELS } from "../constants";
 
@@ -32,14 +33,20 @@ const panel = usePanel();
 const api = useApi();
 const store = useStore();
 const { getNonLocalizedPath } = useLocale();
+const { openLicenseModal } = useLicense({
+  label: "Kirby Live Preview",
+  apiNamespace: "__live-preview__",
+});
 
 // Section props
 const label = ref();
 const updateInterval = ref();
 const interactable = ref();
 const aspectRatio = ref();
-const help = ref();
 const logLevel = ref();
+// Section computed
+const help = ref();
+const license = ref();
 // Local data
 const isRendering = ref(false);
 const showTransitionIframe = ref(false);
@@ -90,8 +97,9 @@ watch(
   updateInterval.value = response.updateInterval;
   interactable.value = response.interactable;
   aspectRatio.value = response.aspectRatio || undefined;
-  help.value = response.help;
   logLevel.value = LOG_LEVELS.indexOf(response.logLevel);
+  help.value = response.help;
+  license.value = response.license;
   // storageKey = getHashedStorageKey(panel.view.path);
 
   // Update interval can be `false`, so we use the default value of `250`
@@ -217,7 +225,7 @@ async function handleMessage({ data }) {
 
     if (path) {
       // Replace Kirby path parameters, like `notes/tag:sky`
-      path = path.replace(/\/[^\/]+?:.+$/, "");
+      path = path.replace(/\/[^/]+?:.+$/, "");
       path = joinURL("pages", path.replaceAll("/", "+"));
     } else {
       path = "site";
@@ -243,7 +251,25 @@ function t(value) {
 
 <template>
   <k-section :label="label">
-    <k-button-group slot="options" layout="collapsed">
+    <k-button-group slot="options">
+      <k-button-group v-if="license === false" layout="collapsed">
+        <k-button
+          theme="love"
+          variant="filled"
+          size="xs"
+          link="https://kirby.tools/live-preview#pricing"
+          target="_blank"
+          :text="panel.t('johannschopplich.preview.license.buy')"
+        />
+        <k-button
+          theme="love"
+          variant="filled"
+          size="xs"
+          icon="key"
+          :text="panel.t('johannschopplich.preview.license.activate')"
+          @click="openLicenseModal()"
+        />
+      </k-button-group>
       <k-button
         variant="filled"
         size="xs"

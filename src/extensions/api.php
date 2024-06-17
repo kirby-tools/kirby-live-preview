@@ -1,5 +1,6 @@
 <?php
 
+use JohannSchopplich\Licensing\Licenses;
 use Kirby\Cms\App;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Form;
@@ -84,6 +85,14 @@ return [
                 return [
                     'html' => $dom->toString()
                 ];
+            }
+        ],
+        [
+            'pattern' => '__live-preview__/register',
+            'method' => 'POST',
+            'action' => function () {
+                $licenses = Licenses::read('johannschopplich/kirby-live-preview');
+                return $licenses->registerFromRequest();
             }
         ]
     ]
