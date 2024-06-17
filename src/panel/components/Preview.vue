@@ -225,6 +225,7 @@ async function handleMessage({ data }) {
 
     if (path) {
       // Replace Kirby path parameters, like `notes/tag:sky`
+      // eslint-disable-next-line regexp/no-super-linear-backtracking
       path = path.replace(/\/[^/]+?:.+$/, "");
       path = joinURL("pages", path.replaceAll("/", "+"));
     } else {
@@ -247,6 +248,13 @@ function t(value) {
   if (!value || typeof value === "string") return value;
   return value[panel.translation.code] ?? Object.values(value)[0];
 }
+
+async function handleRegistration() {
+  const { isRegistered } = await openLicenseModal();
+  if (isRegistered) {
+    license.value = true;
+  }
+}
 </script>
 
 <template>
@@ -267,7 +275,7 @@ function t(value) {
           size="xs"
           icon="key"
           :text="panel.t('johannschopplich.preview.license.activate')"
-          @click="openLicenseModal()"
+          @click="handleRegistration()"
         />
       </k-button-group>
       <k-button
