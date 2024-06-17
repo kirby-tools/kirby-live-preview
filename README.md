@@ -6,7 +6,7 @@ The Live Preview Panel section renders your content in real-time as you type. It
 
 ## Licensing
 
-Kirby Content Translator is a commercial plugin that requires a license. You can install and test the plugin locally without a license. However, production environments require a valid license. You can purchase a license from the [Kirby Tools Website](https://kirby.tools/live-preview).
+Kirby Live Preview is a commercial plugin that requires a license. You can install and test the plugin locally without a license. However, production environments require a valid license. You can purchase a license from the [Kirby Tools Website](https://kirby.tools/live-preview).
 
 ## Getting Started
 
