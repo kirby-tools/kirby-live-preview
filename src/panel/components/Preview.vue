@@ -99,7 +99,11 @@ watch(
   aspectRatio.value = response.aspectRatio || undefined;
   logLevel.value = LOG_LEVELS.indexOf(response.logLevel);
   help.value = response.help;
-  license.value = response.license;
+  license.value =
+    // eslint-disable-next-line no-undef
+    __PLAYGROUND__ && window.location.hostname === "play.kirby.tools"
+      ? true
+      : response.license;
   // storageKey = getHashedStorageKey(panel.view.path);
 
   // Update interval can be `false`, so we use the default value of `250`
