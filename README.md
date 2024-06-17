@@ -1,8 +1,12 @@
+[![Kirby Live Preview](./.github/social-card.png)](https://kirby.tools/live-preview)
+
 # Kirby Live Preview
 
-## Welcome!
+The Live Preview Panel section renders your content in real-time as you type. It provides a live preview with unsaved changes, allowing you to see how your content will look before saving it. The Live Preview Panel is a powerful tool for content creators, editors, and developers.
 
-Thank you for purchasing Kirby Live Preview. We are glad to have you on board and hope you will enjoy reviewing all the content changes right from the Kirby Panel.
+## Licensing
+
+Kirby Content Translator is a commercial plugin that requires a license. You can install and test the plugin locally without a license. However, production environments require a valid license. You can purchase a license from the [Kirby Tools Website](https://kirby.tools/live-preview).
 
 ## Getting Started
 
@@ -30,6 +34,6 @@ For the sake of reproducible bug reports, please include the following informati
 
 We value your feedback and ideas for improving Kirby Live Preview. If you have any suggestions, please feel free to reach out to us via email or preferably by creating a new discussion on our [GitHub Discussions page](https://github.com/kirby-tools/community/discussions).
 
-## Thank You
+## License
 
-Thank you again for choosing Kirby Live Preview. We hope this much requested Kirby feature will make content management easier for you and your customers.
+[Kirby Tools License](./LICENSE.md) License © 2024-PRESENT [Johann Schopplich](https://github.com/johannschopplich)
