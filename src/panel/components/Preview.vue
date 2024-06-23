@@ -33,7 +33,7 @@ const panel = usePanel();
 const api = useApi();
 const store = useStore();
 const { getNonLocalizedPath } = useLocale();
-const { openLicenseModal } = useLicense({
+const { openLicenseModal, assertActivationIntegrity } = useLicense({
   label: "Kirby Live Preview",
   apiNamespace: "__live-preview__",
 });
@@ -58,6 +58,7 @@ const containerRect = ref({});
 const container = ref();
 const iframe = ref();
 const transitionIframe = ref();
+const licenseButtonGroup = ref();
 
 // Non-reactive data
 // let storageKey;
@@ -105,6 +106,10 @@ watch(
       ? true
       : response.license;
   // storageKey = getHashedStorageKey(panel.view.path);
+  assertActivationIntegrity({
+    component: licenseButtonGroup,
+    license: license.value,
+  });
 
   // Update interval can be `false`, so we use the default value of `250`
   throttledRenderPreview = throttle(renderPreview, updateInterval.value || 250);
@@ -264,7 +269,11 @@ async function handleRegistration() {
 <template>
   <k-section :label="label">
     <k-button-group slot="options">
-      <k-button-group v-if="license === false" layout="collapsed">
+      <k-button-group
+        v-if="license === false"
+        ref="licenseButtonGroup"
+        layout="collapsed"
+      >
         <k-button
           theme="love"
           variant="filled"
