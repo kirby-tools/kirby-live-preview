@@ -103,12 +103,12 @@ watch(
   license.value =
     // eslint-disable-next-line no-undef
     __PLAYGROUND__ && window.location.hostname === "play.kirby.tools"
-      ? true
+      ? "active"
       : response.license;
   // storageKey = getHashedStorageKey(panel.view.path);
   assertActivationIntegrity({
     component: licenseButtonGroup,
-    license: license.value,
+    licenseStatus: license.value,
   });
 
   // Update interval can be `false`, so we use the default value of `250`
@@ -261,7 +261,7 @@ function t(value) {
 async function handleRegistration() {
   const { isRegistered } = await openLicenseModal();
   if (isRegistered) {
-    license.value = true;
+    license.value = "active";
   }
 }
 </script>
@@ -270,7 +270,7 @@ async function handleRegistration() {
   <k-section :label="label">
     <k-button-group slot="options">
       <k-button-group
-        v-if="license === false"
+        v-if="license !== 'active'"
         ref="licenseButtonGroup"
         layout="collapsed"
       >

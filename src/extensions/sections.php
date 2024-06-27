@@ -34,7 +34,7 @@ return [
             'help' => fn () => $this->help ? $this->kirby()->kirbytext($this->model()->toSafeString($this->help)) : null,
             'license' => function () {
                 $licenses = Licenses::read('johannschopplich/kirby-live-preview');
-                return $licenses->isRegistered();
+                return $licenses->getStatus();
             }
         ]
     ]
