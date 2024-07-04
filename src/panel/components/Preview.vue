@@ -270,7 +270,7 @@ async function handleRegistration() {
   <k-section :label="label">
     <k-button-group slot="options">
       <k-button-group
-        v-if="license !== 'active'"
+        v-if="license && license !== 'active'"
         ref="licenseButtonGroup"
         layout="collapsed"
       >
