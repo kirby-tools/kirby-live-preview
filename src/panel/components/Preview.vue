@@ -1,4 +1,5 @@
 <script>
+import { useLicense } from "@kirby-tools/licensing";
 import {
   computed,
   nextTick,
@@ -13,7 +14,6 @@ import {
 import { section } from "kirbyuse/props";
 import throttle from "throttleit";
 import { joinURL, withLeadingSlash } from "ufo";
-import { useLicense } from "@kirby-tools/licensing";
 import { useLocale } from "../composables";
 import { LOG_LEVELS } from "../constants";
 
