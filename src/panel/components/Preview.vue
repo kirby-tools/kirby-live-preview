@@ -44,6 +44,7 @@ const updateInterval = ref();
 const interactable = ref();
 const aspectRatio = ref();
 const logLevel = ref();
+const updateStrategy = ref();
 // Section computed
 const help = ref();
 const license = ref();
@@ -63,6 +64,7 @@ const licenseButtonGroup = ref();
 // Non-reactive data
 // let storageKey;
 let throttledRenderPreview;
+let lastUnsavedContent;
 
 const unsavedContent = computed(() => store.getters["content/changes"]());
 
@@ -72,6 +74,7 @@ watch(
     if (
       throttledRenderPreview &&
       updateInterval.value !== false &&
+      updateStrategy.value === "interval" &&
       JSON.stringify(newValue) !== JSON.stringify(oldValue)
     ) {
       throttledRenderPreview(newValue);
@@ -99,6 +102,7 @@ watch(
   interactable.value = response.interactable;
   aspectRatio.value = response.aspectRatio || undefined;
   logLevel.value = LOG_LEVELS.indexOf(response.logLevel);
+  updateStrategy.value = response.updateStrategy;
   help.value = response.help;
   license.value =
     // eslint-disable-next-line no-undef
@@ -128,9 +132,17 @@ watch(
   window.addEventListener("message", handleMessage);
   panel.events.on("page.changeTitle", renderUnsavedContent);
   panel.events.on("file.sort", renderUnsavedContent);
+
+  if (updateStrategy.value === "blur") {
+    document.body.addEventListener("blur", renderMaybeUnsavedContent, true);
+  }
 })();
 
 onBeforeUnmount(() => {
+  if (updateStrategy.value === "blur") {
+    document.body.removeEventListener("blur", renderMaybeUnsavedContent, true);
+  }
+
   window.removeEventListener("resize", updateSectionHeight);
   window.removeEventListener("message", handleMessage);
   panel.events.off("page.changeTitle", renderUnsavedContent);
@@ -147,6 +159,13 @@ function updateSectionHeight() {
 
 function renderUnsavedContent(options) {
   throttledRenderPreview?.(unsavedContent.value, options);
+}
+
+function renderMaybeUnsavedContent() {
+  if (JSON.stringify(unsavedContent.value) === lastUnsavedContent) return;
+
+  throttledRenderPreview?.(unsavedContent.value);
+  lastUnsavedContent = JSON.stringify(unsavedContent.value);
 }
 
 async function renderPreview(content, { persistScrollPosition = true } = {}) {

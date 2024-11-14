@@ -8,6 +8,7 @@ return [
     'preview' => [
         'props' => [
             'label' => fn ($label = null) => I18n::translate($label, $label),
+            'updateStrategy' => fn ($updateStrategy = null) => in_array($updateStrategy, ['interval', 'blur'], true) ? $updateStrategy : 'interval',
             'updateInterval' => function ($updateInterval = 250) {
                 if ($updateInterval === false) {
                     return false;

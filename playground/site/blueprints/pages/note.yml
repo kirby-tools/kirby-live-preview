@@ -25,6 +25,7 @@ columns:
       preview:
         label: Sticky Live Preview
         type: preview
+        updateStrategy: blur
 
   - width: 1/2
     sections:
