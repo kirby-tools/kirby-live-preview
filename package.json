@@ -1,7 +1,7 @@
 {
   "name": "kirby-live-preview",
   "type": "module",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "private": true,
   "packageManager": "pnpm@9.13.0",
   "scripts": {
