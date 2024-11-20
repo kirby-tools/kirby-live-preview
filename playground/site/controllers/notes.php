@@ -13,7 +13,7 @@ return function ($page) {
 
     /**
      * We use the collection helper to fetch the notes collection defined in `/site/collections/notes.php`
-     * 
+     *
      * More about collections:
      * https://getkirby.com/docs/guide/templates/collections
      */

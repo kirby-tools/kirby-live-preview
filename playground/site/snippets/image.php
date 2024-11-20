@@ -1,8 +1,8 @@
 <?php
 
 $attrs = attr([
-  'data-lightbox' => $lightbox ?? false,
-  'href'          => $href     ?? $src,
+    'data-lightbox' => $lightbox ?? false,
+    'href'          => $href     ?? $src,
 ]);
 
 ?>
