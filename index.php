@@ -7,7 +7,7 @@ use Kirby\Cms\App as Kirby;
 
 // Validate Kirby version
 if (!Semver::satisfies(Kirby::version() ?? '0.0.0', '^4.0 || >=5.0.0-alpha.1 <=5.0.0-alpha.3')) {
-    throw new Exception('Kirby SEO Audit requires Kirby 4');
+    throw new Exception('Kirby Live Preview requires Kirby 4');
 }
 
 Kirby::plugin('johannschopplich/live-preview', [
