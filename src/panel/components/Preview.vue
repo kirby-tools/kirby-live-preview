@@ -1,20 +1,19 @@
 <script>
-import { useLicense } from "@kirby-tools/licensing";
+import { LicensingButtonGroup } from "@kirby-tools/licensing/components";
 import {
-  computed,
   nextTick,
   onBeforeUnmount,
   ref,
   useApi,
+  useContent,
   usePanel,
   useSection,
-  useStore,
   watch,
 } from "kirbyuse";
 import { section } from "kirbyuse/props";
 import throttle from "throttleit";
 import { joinURL, withLeadingSlash } from "ufo";
-import { useLocale } from "../composables";
+import { useLocale, usePluginContext } from "../composables";
 import { LOG_LEVELS } from "../constants";
 
 const propsDefinition = {
@@ -31,12 +30,7 @@ const props = defineProps(propsDefinition);
 
 const panel = usePanel();
 const api = useApi();
-const store = useStore();
 const { getNonLocalizedPath } = useLocale();
-const { openLicenseModal, assertActivationIntegrity } = useLicense({
-  label: "Kirby Live Preview",
-  apiNamespace: "__live-preview__",
-});
 
 // Section props
 const label = ref();
@@ -45,31 +39,33 @@ const interactable = ref();
 const aspectRatio = ref();
 const logLevel = ref();
 const updateStrategy = ref();
+
 // Section computed
 const help = ref();
-const license = ref();
-// Local data
+
+// Generic data
 const isRendering = ref(false);
 const showTransitionIframe = ref(false);
 const hasError = ref(false);
 const blobUrl = ref();
 const transitionBlobUrl = ref();
 const containerRect = ref({});
+const licenseStatus = ref();
+
 // Element refs
 const container = ref();
 const iframe = ref();
 const transitionIframe = ref();
-const licenseButtonGroup = ref();
 
 // Non-reactive data
 // let storageKey;
 let throttledRenderPreview;
 let lastUnsavedContent;
 
-const unsavedContent = computed(() => store.getters["content/changes"]());
+const { contentChanges } = useContent();
 
 watch(
-  unsavedContent,
+  contentChanges,
   (newValue, oldValue) => {
     if (
       throttledRenderPreview &&
@@ -93,10 +89,14 @@ watch(
 
 (async () => {
   const { load } = useSection();
-  const response = await load({
-    parent: props.parent,
-    name: props.name,
-  });
+  const [context, response] = await Promise.all([
+    usePluginContext(),
+    load({
+      parent: props.parent,
+      name: props.name,
+    }),
+  ]);
+
   label.value = t(response.label) || panel.t("johannschopplich.preview.label");
   updateInterval.value = response.updateInterval;
   interactable.value = response.interactable;
@@ -104,16 +104,12 @@ watch(
   logLevel.value = LOG_LEVELS.indexOf(response.logLevel);
   updateStrategy.value = response.updateStrategy;
   help.value = response.help;
-  license.value =
+  licenseStatus.value =
     // eslint-disable-next-line no-undef
     __PLAYGROUND__ && window.location.hostname === "play.kirby.tools"
       ? "active"
-      : response.license;
+      : context.licenseStatus;
   // storageKey = getHashedStorageKey(panel.view.path);
-  assertActivationIntegrity({
-    component: licenseButtonGroup,
-    licenseStatus: license.value,
-  });
 
   // Update interval can be `false`, so we use the default value of `250`
   throttledRenderPreview = throttle(renderPreview, updateInterval.value || 250);
@@ -158,14 +154,14 @@ function updateSectionHeight() {
 }
 
 function renderUnsavedContent(options) {
-  throttledRenderPreview?.(unsavedContent.value, options);
+  throttledRenderPreview?.(contentChanges.value, options);
 }
 
 function renderMaybeUnsavedContent() {
-  if (JSON.stringify(unsavedContent.value) === lastUnsavedContent) return;
+  if (JSON.stringify(contentChanges.value) === lastUnsavedContent) return;
 
-  throttledRenderPreview?.(unsavedContent.value);
-  lastUnsavedContent = JSON.stringify(unsavedContent.value);
+  throttledRenderPreview?.(contentChanges.value);
+  lastUnsavedContent = JSON.stringify(contentChanges.value);
 }
 
 async function renderPreview(content, { persistScrollPosition = true } = {}) {
@@ -276,47 +272,26 @@ function t(value) {
   if (!value || typeof value === "string") return value;
   return value[panel.translation.code] ?? Object.values(value)[0];
 }
-
-async function handleRegistration() {
-  const { isRegistered } = await openLicenseModal();
-  if (isRegistered) {
-    license.value = "active";
-  }
-}
 </script>
 
 <template>
   <k-section :label="label">
-    <k-button-group slot="options">
-      <k-button-group
-        v-if="license && license !== 'active'"
-        ref="licenseButtonGroup"
-        layout="collapsed"
-      >
-        <k-button
-          theme="love"
-          variant="filled"
-          size="xs"
-          link="https://kirby.tools/live-preview#pricing"
-          target="_blank"
-          :text="panel.t('johannschopplich.preview.license.buy')"
-        />
-        <k-button
-          theme="love"
-          variant="filled"
-          size="xs"
-          icon="key"
-          :text="panel.t('johannschopplich.preview.license.activate')"
-          @click="handleRegistration()"
-        />
-      </k-button-group>
+    <div slot="options" class="klp-flex klp-items-center klp-gap-2">
+      <LicensingButtonGroup
+        v-if="licenseStatus !== undefined"
+        label="Kirby Live Preview"
+        api-namespace="__live-preview__"
+        :license-status="licenseStatus"
+        pricing-url="https://kirby.tools/live-preview#pricing"
+      />
+
       <k-button
         variant="filled"
         size="xs"
         icon="live-preview-restart"
         @click="renderUnsavedContent()"
       />
-    </k-button-group>
+    </div>
 
     <div
       ref="container"

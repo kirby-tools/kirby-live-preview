@@ -9,6 +9,17 @@ use Kirby\Toolkit\Dom;
 return [
     'routes' => fn (App $kirby) => [
         [
+            'pattern' => '__live-preview__/context',
+            'method' => 'GET',
+            'action' => function () use ($kirby) {
+                $licenses = Licenses::read('johannschopplich/kirby-live-preview');
+
+                return [
+                    'licenseStatus' => $licenses->getStatus()
+                ];
+            }
+        ],
+        [
             'pattern' => '__live-preview__/render',
             'method' => 'POST',
             'action' => function () use ($kirby) {

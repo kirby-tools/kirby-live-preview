@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Controllers allow you to separate the logic of your templates from your markup.
  * This is especially useful for complex logic, but also in general to keep your templates clean.

@@ -1,6 +1,5 @@
 <?php
 
-use JohannSchopplich\Licensing\Licenses;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\I18n;
 
@@ -32,11 +31,7 @@ return [
             'logLevel' => fn ($logLevel = null) => in_array($logLevel, ['error', 'warn', 'info', 'debug'], true) ? $logLevel : 'warn'
         ],
         'computed' => [
-            'help' => fn () => $this->help ? $this->kirby()->kirbytext($this->model()->toSafeString($this->help)) : null,
-            'license' => function () {
-                $licenses = Licenses::read('johannschopplich/kirby-live-preview');
-                return $licenses->getStatus();
-            }
+            'help' => fn () => $this->help ? $this->kirby()->kirbytext($this->model()->toSafeString($this->help)) : null
         ]
     ]
 ];

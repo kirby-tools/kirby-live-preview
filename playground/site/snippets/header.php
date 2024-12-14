@@ -34,11 +34,11 @@
 */
 ?>
   <?= css([
-    'assets/css/prism.css',
-    'assets/css/lightbox.css',
-    'assets/css/index.css',
-    '@auto'
-]) ?>
+      'assets/css/prism.css',
+      'assets/css/lightbox.css',
+      'assets/css/index.css',
+      '@auto'
+  ]) ?>
 
   <?php
 /*
