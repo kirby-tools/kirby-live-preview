@@ -43,7 +43,7 @@ const updateStrategy = ref();
 // Section computed
 const help = ref();
 
-// Generic data
+// Local data
 const isRendering = ref(false);
 const showTransitionIframe = ref(false);
 const hasError = ref(false);
@@ -58,7 +58,6 @@ const iframe = ref();
 const transitionIframe = ref();
 
 // Non-reactive data
-// let storageKey;
 let throttledRenderPreview;
 let lastUnsavedContent;
 
@@ -109,7 +108,6 @@ watch(
     __PLAYGROUND__ && window.location.hostname === "play.kirby.tools"
       ? "active"
       : context.licenseStatus;
-  // storageKey = getHashedStorageKey(panel.view.path);
 
   // Update interval can be `false`, so we use the default value of `250`
   throttledRenderPreview = throttle(renderPreview, updateInterval.value || 250);
@@ -300,7 +298,7 @@ function t(value) {
         isRendering && 'klp-pointer-events-none',
         transitionBlobUrl && !hasError && 'k-shadow-md',
         (!transitionBlobUrl || hasError) &&
-          'klp-border klp-border-dashed klp-border-[var(--color-gray-400)]',
+          'klp-border klp-border-dashed klp-border-[var(--color-border)]',
       ]"
       :style="{
         aspectRatio,
@@ -315,7 +313,7 @@ function t(value) {
         v-if="transitionBlobUrl"
         ref="transitionIframe"
         :src="transitionBlobUrl"
-        class="klp-h-full klp-w-full klp-rounded-[var(--input-rounded)] klp-bg-white"
+        class="klp-h-full klp-w-full klp-rounded-[var(--input-rounded)] klp-bg-[var(--input-color-back)]"
         :class="[hasError && 'klp-pointer-events-none klp-opacity-0']"
         :style="{
           gridArea: '1 / 1 / 1 / 1',
@@ -325,7 +323,7 @@ function t(value) {
         v-if="blobUrl"
         ref="iframe"
         :src="blobUrl"
-        class="klp-h-full klp-w-full klp-rounded-[var(--input-rounded)] klp-bg-white"
+        class="klp-h-full klp-w-full klp-rounded-[var(--input-rounded)] klp-bg-[var(--input-color-back)]"
         :class="[
           (showTransitionIframe || hasError) &&
             'klp-pointer-events-none klp-opacity-0',
@@ -360,6 +358,8 @@ function t(value) {
 </template>
 
 <style scoped>
+/* Required since Tailwind doesn't support shadow
+   as arbitrary value (interpreted as color) */
 .k-shadow-md {
   box-shadow: var(--shadow-md);
 }
