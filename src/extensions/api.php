@@ -11,7 +11,7 @@ return [
         [
             'pattern' => '__live-preview__/context',
             'method' => 'GET',
-            'action' => function () use ($kirby) {
+            'action' => function () {
                 $licenses = Licenses::read('johannschopplich/kirby-live-preview');
 
                 return [
