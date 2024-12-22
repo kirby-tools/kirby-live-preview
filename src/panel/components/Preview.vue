@@ -105,9 +105,7 @@ watch(
   help.value = response.help;
   licenseStatus.value =
     // eslint-disable-next-line no-undef
-    __PLAYGROUND__ && window.location.hostname === "play.kirby.tools"
-      ? "active"
-      : context.licenseStatus;
+    __PLAYGROUND__ ? "active" : context.licenseStatus;
 
   // Update interval can be `false`, so we use the default value of `250`
   throttledRenderPreview = throttle(renderPreview, updateInterval.value || 250);
@@ -298,7 +296,7 @@ function t(value) {
         isRendering && 'klp-pointer-events-none',
         transitionBlobUrl && !hasError && 'k-shadow-md',
         (!transitionBlobUrl || hasError) &&
-          'klp-border klp-border-dashed klp-border-[var(--color-border)]',
+          'klp-border klp-border-dashed klp-border-[light-dark(var(--color-gray-400),var(--color-border))]',
       ]"
       :style="{
         aspectRatio,
