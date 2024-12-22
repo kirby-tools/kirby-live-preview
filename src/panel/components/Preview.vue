@@ -1,6 +1,7 @@
 <script>
 import { LicensingButtonGroup } from "@kirby-tools/licensing/components";
 import {
+  isKirby5,
   nextTick,
   onBeforeUnmount,
   ref,
@@ -28,6 +29,7 @@ export default {
 <script setup>
 const props = defineProps(propsDefinition);
 
+const _isKirby5 = isKirby5();
 const panel = usePanel();
 const api = useApi();
 const { getNonLocalizedPath } = useLocale();
@@ -296,9 +298,12 @@ function t(value) {
         isRendering && 'klp-pointer-events-none',
         transitionBlobUrl && !hasError && 'k-shadow-md',
         (!transitionBlobUrl || hasError) &&
-          'klp-border klp-border-dashed klp-border-[light-dark(var(--color-gray-400),var(--color-border))]',
+          'klp-border klp-border-dashed klp-border-[var(--audit-color-border)]',
       ]"
       :style="{
+        '--audit-color-border': _isKirby5
+          ? 'light-dark(var(--color-gray-400),var(--color-border))'
+          : 'var(--color-gray-400)',
         aspectRatio,
         height: aspectRatio
           ? 'auto'
