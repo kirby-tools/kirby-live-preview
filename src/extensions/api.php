@@ -99,11 +99,11 @@ return [
             }
         ],
         [
-            'pattern' => '__live-preview__/register',
+            'pattern' => '__live-preview__/activate',
             'method' => 'POST',
             'action' => function () {
                 $licenses = Licenses::read('johannschopplich/kirby-live-preview');
-                return $licenses->registerFromRequest();
+                return $licenses->activateFromRequest();
             }
         ]
     ]
