@@ -7,6 +7,7 @@ import {
   ref,
   useApi,
   useContent,
+  useI18n,
   usePanel,
   useSection,
   watch,
@@ -32,6 +33,7 @@ const props = defineProps(propsDefinition);
 const _isKirby5 = isKirby5();
 const panel = usePanel();
 const api = useApi();
+const { t } = useI18n();
 const { getNonLocalizedPath } = useLocale();
 
 // Section props
@@ -45,7 +47,7 @@ const updateStrategy = ref();
 // Section computed
 const help = ref();
 
-// Local data
+// Runtime state
 const isRendering = ref(false);
 const showTransitionIframe = ref(false);
 const hasError = ref(false);
@@ -264,11 +266,6 @@ async function handleMessage({ data }) {
       console.error(error);
     }
   }
-}
-
-function t(value) {
-  if (!value || typeof value === "string") return value;
-  return value[panel.translation.code] ?? Object.values(value)[0];
 }
 </script>
 
