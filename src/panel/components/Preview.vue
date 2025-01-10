@@ -63,24 +63,20 @@ const transitionIframe = ref();
 
 // Non-reactive data
 let throttledRenderPreview;
-let lastUnsavedContent;
+let lastRenderedContent;
 
 const { contentChanges } = useContent();
 
-watch(
-  contentChanges,
-  (newValue, oldValue) => {
-    if (
-      throttledRenderPreview &&
-      updateInterval.value !== false &&
-      updateStrategy.value === "interval" &&
-      JSON.stringify(newValue) !== JSON.stringify(oldValue)
-    ) {
-      throttledRenderPreview(newValue);
-    }
-  },
-  { deep: true },
-);
+watch(contentChanges, (newValue) => {
+  if (
+    throttledRenderPreview &&
+    updateInterval.value !== false &&
+    updateStrategy.value === "interval" &&
+    JSON.stringify(newValue) !== lastRenderedContent
+  ) {
+    throttledRenderPreview(newValue);
+  }
+});
 
 watch(
   // Will be `null` in single language setups
@@ -158,10 +154,9 @@ function renderUnsavedContent(options) {
 }
 
 function renderMaybeUnsavedContent() {
-  if (JSON.stringify(contentChanges.value) === lastUnsavedContent) return;
-
-  throttledRenderPreview?.(contentChanges.value);
-  lastUnsavedContent = JSON.stringify(contentChanges.value);
+  if (JSON.stringify(contentChanges.value) !== lastRenderedContent) {
+    throttledRenderPreview?.(contentChanges.value);
+  }
 }
 
 async function renderPreview(content, { persistScrollPosition = true } = {}) {
@@ -211,6 +206,7 @@ async function renderPreview(content, { persistScrollPosition = true } = {}) {
     showTransitionIframe.value = false;
     hasError.value = false;
     transitionBlobUrl.value = blobUrl.value;
+    lastRenderedContent = JSON.stringify(content);
 
     // Revoke the previous blob URL to free up memory
     if (lastBlobUrl) {

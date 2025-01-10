@@ -47,7 +47,7 @@ return [
                 // Clone the page to inject the new (unsaved) content
                 $page = $page->clone();
                 $page->content()->update($form->strings());
-                $page->content()->update(['previewmode' => true]);
+                $page->content()->update(['previewMode' => 'true']);
 
                 // Find all `writer` fields
                 $writerFields = array_filter(
@@ -65,8 +65,17 @@ return [
                     ]);
                 }
 
+                $template = $page->template();
+
+                if (!$template->exists()) {
+                    throw new NotFoundException([
+                        'key' => 'template.default.notFound'
+                    ]);
+                }
+
                 // Render the page as HTML
-                $html = $page->render();
+                $kirby->data = $page->controller([], 'html');
+                $html = $template->render($kirby->data);
 
                 $dom = new Dom($html);
                 $head = $dom->query('/html/head')[0];
