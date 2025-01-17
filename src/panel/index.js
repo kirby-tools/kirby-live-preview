@@ -1,9 +1,9 @@
-import PreviewSection from "./components/Preview.vue";
+import LivePreview from "./components/LivePreview.vue";
 import "./index.css";
 
 window.panel.plugin("johannschopplich/live-preview", {
   sections: {
-    preview: PreviewSection,
+    preview: LivePreview,
   },
   icons: {
     // i-ri:restart-line
