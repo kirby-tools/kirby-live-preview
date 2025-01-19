@@ -32,7 +32,7 @@ return [
             'logLevel' => fn ($logLevel = null) => in_array($logLevel, ['error', 'warn', 'info', 'debug'], true) ? $logLevel : 'warn'
         ],
         'computed' => [
-            'pageId' => function ( ) {
+            'pageId' => function () {
                 /** @var \Kirby\Cms\Page */
                 $model = $this->model();
 
