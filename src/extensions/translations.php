@@ -9,12 +9,12 @@ return [
         'johannschopplich.preview.label' => 'Live-Vorschau',
         'johannschopplich.preview.error.render' => 'Vorschau fehlgeschlagen'
     ],
-    'nl' => [
-        'johannschopplich.preview.label' => 'Live voorbeeld',
-        'johannschopplich.preview.error.render' => 'Voorbeeld mislukt'
-    ],
     'fr' => [
         'johannschopplich.preview.label' => 'Aperçu en direct',
         'johannschopplich.preview.error.render' => 'Aperçu échoué'
+    ],
+    'nl' => [
+        'johannschopplich.preview.label' => 'Live voorbeeld',
+        'johannschopplich.preview.error.render' => 'Voorbeeld mislukt'
     ]
 ];

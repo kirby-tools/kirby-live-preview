@@ -7,6 +7,7 @@ return [
     'preview' => [
         'props' => [
             'label' => fn ($label = null) => I18n::translate($label, $label),
+            'pageId' => fn ($pageId = null) => is_string($pageId) ? $pageId : null,
             'updateStrategy' => fn ($updateStrategy = null) => in_array($updateStrategy, ['interval', 'blur'], true) ? $updateStrategy : 'interval',
             'updateInterval' => function ($updateInterval = 250) {
                 if ($updateInterval === false) {
@@ -31,6 +32,16 @@ return [
             'logLevel' => fn ($logLevel = null) => in_array($logLevel, ['error', 'warn', 'info', 'debug'], true) ? $logLevel : 'warn'
         ],
         'computed' => [
+            'pageId' => function ( ) {
+                /** @var \Kirby\Cms\Page */
+                $model = $this->model();
+
+                if ($model::CLASS_ALIAS !== 'page') {
+                    return $this->pageId ?? $model->kirby()->site()->homePageId();
+                }
+
+                return $this->pageId ?? $model->id();
+            },
             'help' => fn () => $this->help ? $this->kirby()->kirbytext($this->model()->toSafeString($this->help)) : null
         ]
     ]

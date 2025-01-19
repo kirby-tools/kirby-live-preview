@@ -38,6 +38,7 @@ const { getNonLocalizedPath } = useLocale();
 
 // Section props
 const label = ref();
+const pageId = ref();
 const updateInterval = ref();
 const interactable = ref();
 const aspectRatio = ref();
@@ -97,6 +98,7 @@ watch(
   ]);
 
   label.value = t(response.label) || panel.t("johannschopplich.preview.label");
+  pageId.value = response.pageId;
   updateInterval.value = response.updateInterval;
   interactable.value = response.interactable;
   aspectRatio.value = response.aspectRatio || undefined;
@@ -163,9 +165,6 @@ async function renderPreview(content, { persistScrollPosition = true } = {}) {
   if (isRendering.value) return;
   isRendering.value = true;
 
-  const id = panel.view.path.startsWith("pages/")
-    ? panel.view.path.slice(6).replaceAll("+", "/")
-    : undefined;
   let scrollPosition = 0;
 
   if (iframe.value) {
@@ -178,7 +177,7 @@ async function renderPreview(content, { persistScrollPosition = true } = {}) {
 
   try {
     const { html } = await api.post("__live-preview__/render", {
-      id,
+      id: pageId.value,
       content,
       interactable: interactable.value,
     });
@@ -291,10 +290,10 @@ async function handleMessage({ data }) {
         isRendering && 'klp-pointer-events-none',
         transitionBlobUrl && !hasError && 'k-shadow-md',
         (!transitionBlobUrl || hasError) &&
-          'klp-border klp-border-dashed klp-border-[var(--audit-color-border)]',
+          'klp-border klp-border-dashed klp-border-[var(--preview-color-border)]',
       ]"
       :style="{
-        '--audit-color-border': _isKirby5
+        '--preview-color-border': _isKirby5
           ? 'light-dark(var(--color-gray-400),var(--color-border))'
           : 'var(--color-gray-400)',
         aspectRatio,

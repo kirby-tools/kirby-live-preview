@@ -1,0 +1,18 @@
+Title: Test
+
+----
+
+Text: [{"content":{"level":"h2","text":"Structure Test"},"id":"002bee60-b014-4c48-b7c5-2268bb273bcf","isHidden":false,"type":"heading"}]
+
+----
+
+Structure:
+
+- 
+  platform: Platform 1
+- 
+  platform: Platform 2
+
+----
+
+Uuid: qgMRstfhgd6yhKB4

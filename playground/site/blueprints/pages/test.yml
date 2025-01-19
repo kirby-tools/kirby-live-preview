@@ -1,0 +1,23 @@
+title: Test
+
+columns:
+  - width: 1/2
+    sticky: true
+    sections:
+      preview:
+        label: Sticky Live Preview
+        type: preview
+
+  - width: 1/2
+    sections:
+      content:
+        type: fields
+        fields:
+          text:
+            type: blocks
+          structure:
+            type: structure
+            fields:
+              platform:
+                label: Platform
+                type: text

@@ -23,10 +23,11 @@ return [
             'pattern' => '__live-preview__/render',
             'method' => 'POST',
             'action' => function () use ($kirby) {
-                $request = $kirby->request();
+                $request = $kirby->request()->body();
                 $id = $request->get('id', $kirby->site()->homePageId());
                 $content = $request->get('content', []);
                 $interactable = $request->get('interactable', true);
+
                 $page = $kirby->page($id);
                 $plugin = $kirby->plugin('johannschopplich/live-preview');
 
