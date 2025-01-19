@@ -1,6 +1,7 @@
 <script>
 import { LicensingButtonGroup } from "@kirby-tools/licensing/components";
 import {
+  computed,
   isKirby5,
   nextTick,
   onBeforeUnmount,
@@ -54,7 +55,6 @@ const showTransitionIframe = ref(false);
 const hasError = ref(false);
 const blobUrl = ref();
 const transitionBlobUrl = ref();
-const containerRect = ref({});
 const licenseStatus = ref();
 
 // Element refs
@@ -85,6 +85,20 @@ watch(
   () => {
     renderUnsavedContent();
   },
+);
+
+const isTopbarVisible = ref(true);
+const topbarHeight = ref(0);
+const headerHeight = ref(0);
+
+const containerHeight = computed(
+  () =>
+    `calc(100dvh - ${
+      isTopbarVisible.value
+        ? // Substract topbar bottom margin
+          `calc(${topbarHeight.value}px + var(--spacing-8))`
+        : "-2.75rem"
+    } - ${headerHeight.value}px - 6.5rem`,
 );
 
 (async () => {
@@ -118,9 +132,29 @@ watch(
   // Equals the `mounted` lifecycle hook
   await nextTick();
 
-  if (!aspectRatio.value) {
-    updateSectionHeight();
-    window.addEventListener("resize", updateSectionHeight);
+  const topbar = document.querySelector(".k-topbar");
+  const header = document.querySelector(".k-header");
+
+  if (!aspectRatio.value && topbar && header) {
+    topbarHeight.value = topbar.offsetHeight;
+    headerHeight.value = header.offsetHeight;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isTopbarVisible.value = entry.isIntersecting;
+        if (entry.isIntersecting) {
+          topbarHeight.value = entry.target.offsetHeight;
+        }
+      },
+      {
+        threshold: [0],
+        // Account for the spacing below the topbar
+        rootMargin: "32px 0px 0px 0px",
+      },
+    );
+
+    observer.observe(topbar);
+    onBeforeUnmount(observer.disconnect);
   }
 
   window.addEventListener("message", handleMessage);
@@ -137,7 +171,6 @@ onBeforeUnmount(() => {
     document.body.removeEventListener("blur", renderMaybeUnsavedContent, true);
   }
 
-  window.removeEventListener("resize", updateSectionHeight);
   window.removeEventListener("message", handleMessage);
   panel.events.off("page.changeTitle", renderUnsavedContent);
   panel.events.off("file.sort", renderUnsavedContent);
@@ -146,10 +179,6 @@ onBeforeUnmount(() => {
     URL.revokeObjectURL(blobUrl.value);
   }
 });
-
-function updateSectionHeight() {
-  containerRect.value = container.value.getBoundingClientRect();
-}
 
 function renderUnsavedContent(options) {
   throttledRenderPreview?.(contentChanges.value, options);
@@ -297,9 +326,7 @@ async function handleMessage({ data }) {
           ? 'light-dark(var(--color-gray-400),var(--color-border))'
           : 'var(--color-gray-400)',
         aspectRatio,
-        height: aspectRatio
-          ? 'auto'
-          : `calc(100dvh - ${containerRect.top ?? 0}px - var(--spacing-3))`,
+        height: aspectRatio ? 'auto' : containerHeight,
         maxWidth: '100%',
       }"
       data-theme="passive"
