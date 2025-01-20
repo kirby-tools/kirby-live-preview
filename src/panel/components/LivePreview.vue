@@ -65,7 +65,7 @@ const transitionIframe = ref();
 // Non-reactive data
 let throttledRenderPreview;
 let lastRenderedContent;
-const eventAbortController = new AbortController();
+const eventsController = new AbortController();
 
 const { contentChanges } = useContent();
 
@@ -159,7 +159,7 @@ const containerHeight = computed(
   }
 
   window.addEventListener("message", handleMessage, {
-    signal: eventAbortController.signal,
+    signal: eventsController.signal,
   });
   panel.events.on("page.changeTitle", renderUnsavedContent);
   panel.events.on("file.sort", renderUnsavedContent);
@@ -172,13 +172,13 @@ const containerHeight = computed(
           throttledRenderPreview?.(contentChanges.value);
         }
       },
-      { capture: true, signal: eventAbortController.signal },
+      { capture: true, signal: eventsController.signal },
     );
   }
 })();
 
 onBeforeUnmount(() => {
-  eventAbortController.abort();
+  eventsController.abort();
 
   panel.events.off("page.changeTitle", renderUnsavedContent);
   panel.events.off("file.sort", renderUnsavedContent);
