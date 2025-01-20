@@ -65,6 +65,7 @@ const transitionIframe = ref();
 // Non-reactive data
 let throttledRenderPreview;
 let lastRenderedContent;
+const eventAbortController = new AbortController();
 
 const { contentChanges } = useContent();
 
@@ -157,21 +158,28 @@ const containerHeight = computed(
     onBeforeUnmount(observer.disconnect);
   }
 
-  window.addEventListener("message", handleMessage);
+  window.addEventListener("message", handleMessage, {
+    signal: eventAbortController.signal,
+  });
   panel.events.on("page.changeTitle", renderUnsavedContent);
   panel.events.on("file.sort", renderUnsavedContent);
 
   if (updateStrategy.value === "blur") {
-    document.body.addEventListener("blur", renderMaybeUnsavedContent, true);
+    document.body.addEventListener(
+      "blur",
+      () => {
+        if (JSON.stringify(contentChanges.value) !== lastRenderedContent) {
+          throttledRenderPreview?.(contentChanges.value);
+        }
+      },
+      { capture: true, signal: eventAbortController.signal },
+    );
   }
 })();
 
 onBeforeUnmount(() => {
-  if (updateStrategy.value === "blur") {
-    document.body.removeEventListener("blur", renderMaybeUnsavedContent, true);
-  }
+  eventAbortController.abort();
 
-  window.removeEventListener("message", handleMessage);
   panel.events.off("page.changeTitle", renderUnsavedContent);
   panel.events.off("file.sort", renderUnsavedContent);
 
@@ -182,12 +190,6 @@ onBeforeUnmount(() => {
 
 function renderUnsavedContent(options) {
   throttledRenderPreview?.(contentChanges.value, options);
-}
-
-function renderMaybeUnsavedContent() {
-  if (JSON.stringify(contentChanges.value) !== lastRenderedContent) {
-    throttledRenderPreview?.(contentChanges.value);
-  }
 }
 
 async function renderPreview(content, { persistScrollPosition = true } = {}) {

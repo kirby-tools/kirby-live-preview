@@ -36,11 +36,11 @@ return [
                 /** @var \Kirby\Cms\Page */
                 $model = $this->model();
 
-                if ($model::CLASS_ALIAS !== 'page') {
-                    return $this->pageId ?? $model->kirby()->site()->homePageId();
+                if ($this->pageId) {
+                    return $this->pageId;
                 }
 
-                return $this->pageId ?? $model->id();
+                return $model::CLASS_ALIAS === 'page' ? $model->id() : $model->kirby()->site()->homePageId();
             },
             'help' => fn () => $this->help ? $this->kirby()->kirbytext($this->model()->toSafeString($this->help)) : null
         ]
