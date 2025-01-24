@@ -23,7 +23,8 @@ return [
             'action' => function () use ($kirby) {
                 $request = $kirby->request()->body();
                 $preview = new LivePreview(
-                    id: $request->get('id')
+                    id: $request->get('pageId'),
+                    model: $request->get('model')
                 );
 
                 $html = $preview->render(

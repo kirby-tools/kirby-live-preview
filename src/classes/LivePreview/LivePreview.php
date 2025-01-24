@@ -21,11 +21,12 @@ final class LivePreview
     private readonly App $kirby;
     private readonly Page $page;
     private readonly Plugin $plugin;
-    private readonly string $id;
     private readonly array $content;
 
-    public function __construct(string|null $id)
-    {
+    public function __construct(
+        private readonly string|null $id,
+        private readonly string $model
+    ) {
         $kirby = App::instance();
         $page = $id ? $kirby->page($id) : $kirby->site()->homePage();
         $plugin = $kirby->plugin('johannschopplich/live-preview');
@@ -41,7 +42,6 @@ final class LivePreview
         $this->kirby = $kirby;
         $this->page = $page;
         $this->plugin = $plugin;
-        $this->id = $id;
     }
 
     /**
@@ -51,7 +51,7 @@ final class LivePreview
     {
         $this->content = $content;
 
-        $previewPage = $this->createPreviewModel($this->page, $this->id === null ? [] : $content);
+        $previewPage = $this->createPreviewModel($this->page, $this->model === 'site' ? [] : $content);
         $html = $this->renderTemplate($previewPage);
 
         return $this->processHtml($html, $interactable);
@@ -86,7 +86,7 @@ final class LivePreview
      */
     private function resolveTemplateData(Page $page, string $contentType = 'html'): array
     {
-        $site = $this->id === null
+        $site = $this->model === 'site'
             ? $this->createPreviewModel($this->kirby->site(), $this->content)
             : $this->kirby->site();
 

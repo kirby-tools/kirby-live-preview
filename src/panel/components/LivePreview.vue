@@ -87,17 +87,18 @@ watch(
 );
 
 const isTopbarVisible = ref(true);
-const topbarHeight = ref(0);
-const headerHeight = ref(0);
+const topbarHeight = ref(32);
+const headerHeight = ref(65);
 
 const containerHeight = computed(
   () =>
     `calc(100dvh - ${
       isTopbarVisible.value
         ? // Substract topbar bottom margin
-          `calc(${topbarHeight.value}px + var(--spacing-8))`
-        : "-2.75rem"
-    } - ${headerHeight.value}px - 6.5rem`,
+          `calc(${topbarHeight.value}px + 5.75rem)`
+        : // Sticky columns have applied `top: calc(var(--header-sticky-offset) + 2vh)`
+          "2vh"
+    } - ${headerHeight.value}px - 2.75rem`,
 );
 
 (async () => {
@@ -146,8 +147,7 @@ const containerHeight = computed(
       },
       {
         threshold: [0],
-        // Account for the spacing below the topbar
-        rootMargin: "32px 0px 0px 0px",
+        rootMargin: "64px 0px 0px 0px",
       },
     );
 
@@ -205,9 +205,10 @@ async function renderPreview(content, { persistScrollPosition = true } = {}) {
 
   try {
     const { data: html } = await api.post("__live-preview__/render", {
-      id: pageId.value,
+      pageId: pageId.value,
       content,
       interactable: interactable.value,
+      model: panel.view.path === "site" ? "site" : "page",
     });
 
     const lastBlobUrl = blobUrl.value;
