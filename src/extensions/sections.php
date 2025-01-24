@@ -28,21 +28,15 @@ return [
 
                 return $aspectRatio;
             },
-            'help' => fn ($help = null) => I18n::translate($help, $help),
-            'logLevel' => fn ($logLevel = null) => in_array($logLevel, ['error', 'warn', 'info', 'debug'], true) ? $logLevel : 'warn'
+            'help' => fn ($help = null) => I18n::translate($help, $help)
         ],
         'computed' => [
             'pageId' => function () {
-                /** @var \Kirby\Cms\Page */
-                $model = $this->model();
-
-                if ($this->pageId) {
-                    return $this->pageId;
-                }
-
-                return $model::CLASS_ALIAS === 'page' ? $model->id() : $model->kirby()->site()->homePageId();
+                return $this->pageId ?? $this->model()->id();
             },
-            'help' => fn () => $this->help ? $this->kirby()->kirbytext($this->model()->toSafeString($this->help)) : null
+            'help' => function () {
+                return $this->help ? $this->kirby()->kirbytext($this->model()->toSafeString($this->help)) : null;
+            }
         ]
     ]
 ];

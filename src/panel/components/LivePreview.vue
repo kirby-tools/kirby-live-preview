@@ -17,7 +17,6 @@ import { section } from "kirbyuse/props";
 import throttle from "throttleit";
 import { joinURL, withLeadingSlash } from "ufo";
 import { useLocale, usePluginContext } from "../composables";
-import { LOG_LEVELS } from "../constants";
 
 const propsDefinition = {
   ...section,
@@ -43,7 +42,6 @@ const pageId = ref();
 const updateInterval = ref();
 const interactable = ref();
 const aspectRatio = ref();
-const logLevel = ref();
 const updateStrategy = ref();
 
 // Section computed
@@ -117,7 +115,6 @@ const containerHeight = computed(
   updateInterval.value = response.updateInterval;
   interactable.value = response.interactable;
   aspectRatio.value = response.aspectRatio || undefined;
-  logLevel.value = LOG_LEVELS.indexOf(response.logLevel);
   updateStrategy.value = response.updateStrategy;
   help.value = response.help;
   licenseStatus.value =
@@ -207,7 +204,7 @@ async function renderPreview(content, { persistScrollPosition = true } = {}) {
   showTransitionIframe.value = true;
 
   try {
-    const { html } = await api.post("__live-preview__/render", {
+    const { data: html } = await api.post("__live-preview__/render", {
       id: pageId.value,
       content,
       interactable: interactable.value,
