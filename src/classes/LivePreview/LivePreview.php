@@ -24,7 +24,8 @@ final class LivePreview
     private readonly string $id;
     private readonly array $content;
 
-    public function __construct(string|null $id) {
+    public function __construct(string|null $id)
+    {
         $kirby = App::instance();
         $page = $id ? $kirby->page($id) : $kirby->site()->homePage();
         $plugin = $kirby->plugin('johannschopplich/live-preview');
@@ -79,49 +80,50 @@ final class LivePreview
     }
 
     /**
-	 * Call the page controller
+     * Call the page controller
      *
-	 * @description This is a modified version of the original `controller` method from Kirby's `Page` class to support injecting unsaved content for site-level previews
-	 */
-	private function resolveTemplateData(Page $page, string $contentType = 'html'): array {
+     * @description This is a modified version of the original `controller` method from Kirby's `Page` class to support injecting unsaved content for site-level previews
+     */
+    private function resolveTemplateData(Page $page, string $contentType = 'html'): array
+    {
         $site = $this->id === null
             ? $this->createPreviewModel($this->kirby->site(), $this->content)
             : $this->kirby->site();
 
-		$data = [
-			'kirby' => $this->kirby,
-			'site'  => $site,
-			'pages' => new LazyValue(fn () => $site->children()),
-			'page'  => new LazyValue(fn () => $site->visit($page))
+        $data = [
+            'kirby' => $this->kirby,
+            'site'  => $site,
+            'pages' => new LazyValue(fn () => $site->children()),
+            'page'  => new LazyValue(fn () => $site->visit($page))
         ];
 
-		$controllerData = $this->kirby->controller(
-			$page->template()->name(),
-			$data,
-			$contentType
-		);
+        $controllerData = $this->kirby->controller(
+            $page->template()->name(),
+            $data,
+            $contentType
+        );
 
-		if (!empty($controllerData)) {
-			$classes = [
-				'kirby' => App::class,
-				'site'  => Site::class,
-				'pages' => Pages::class,
-				'page'  => Page::class
-			];
+        if (!empty($controllerData)) {
+            $classes = [
+                'kirby' => App::class,
+                'site'  => Site::class,
+                'pages' => Pages::class,
+                'page'  => Page::class
+            ];
 
-			foreach ($controllerData as $key => $value) {
-				$data[$key] = match (true) {
-					array_key_exists($key, $classes) === false => $value,
-					$value instanceof $classes[$key] => $value,
-					default => throw new InvalidArgumentException('The returned variable "' . $key . '" from the controller "' . $page->template()->name() . '" is not of the required type "' . $classes[$key] . '"')
-				};
-			}
-		}
+            foreach ($controllerData as $key => $value) {
+                $data[$key] = match (true) {
+                    array_key_exists($key, $classes) === false => $value,
+                    $value instanceof $classes[$key] => $value,
+                    default => throw new InvalidArgumentException('The returned variable "' . $key . '" from the controller "' . $page->template()->name() . '" is not of the required type "' . $classes[$key] . '"')
+                };
+            }
+        }
 
-		$data = LazyValue::unwrap($data);
+        $data = LazyValue::unwrap($data);
 
-		return $data;
-	}
+        return $data;
+    }
 
     /**
      * Creates a preview version of the page with updated content
