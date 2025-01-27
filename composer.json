@@ -2,7 +2,7 @@
   "name": "johannschopplich/kirby-live-preview",
   "description": "Real-time page preview in the Kirby Panel",
   "type": "kirby-plugin",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "keywords": [
     "content",
     "kirby",
