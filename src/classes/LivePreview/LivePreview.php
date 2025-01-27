@@ -8,11 +8,11 @@ use Kirby\Cms\App;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
-use Kirby\Cms\Plugin;
 use Kirby\Cms\Site;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Form;
+// use Kirby\Plugin\Plugin;
 use Kirby\Toolkit\Dom;
 use Kirby\Toolkit\LazyValue;
 
@@ -20,7 +20,9 @@ final class LivePreview
 {
     private readonly App $kirby;
     private readonly Page $page;
-    private readonly Plugin $plugin;
+    // TODO: Use Kirby 5 plugin class
+    // private readonly Plugin $plugin;
+    private readonly mixed $plugin;
     private readonly array $content;
 
     public function __construct(
