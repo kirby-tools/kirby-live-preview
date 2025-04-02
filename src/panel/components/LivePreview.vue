@@ -36,6 +36,12 @@ const api = useApi();
 const { t } = useI18n();
 const { getNonLocalizedPath } = useLocale();
 
+const DEVICE_VIEWPORT_PRESETS = {
+  mobile: 390,
+  tablet: 768,
+  desktop: 1440,
+};
+
 // Section props
 const label = ref();
 const pageId = ref();
@@ -53,6 +59,8 @@ const showTransitionIframe = ref(false);
 const hasError = ref(false);
 const blobUrl = ref();
 const transitionBlobUrl = ref();
+const devicePreview = ref();
+const previewIframeStyles = ref({});
 const licenseStatus = ref();
 
 // Element refs
@@ -122,8 +130,8 @@ const containerHeight = computed(
     // eslint-disable-next-line no-undef
     __PLAYGROUND__ ? "active" : context.licenseStatus;
 
-  // Update interval can be `false`, so we use the default value of `250`
-  throttledRenderPreview = throttle(renderPreview, updateInterval.value || 250);
+  // Update interval can be `false`, so we use the default value of `500`
+  throttledRenderPreview = throttle(renderPreview, updateInterval.value || 500);
 
   // Lazily render the preview
   renderUnsavedContent();
@@ -144,6 +152,7 @@ const containerHeight = computed(
         if (entry.isIntersecting) {
           topbarHeight.value = entry.target.offsetHeight;
         }
+        updatePreviewStyles();
       },
       {
         threshold: [0],
@@ -187,6 +196,47 @@ onBeforeUnmount(() => {
 
 function renderUnsavedContent(options) {
   throttledRenderPreview?.(contentChanges.value, options);
+}
+
+function openPreviewInTab() {
+  const url = new URL(blobUrl.value);
+  window.open(url, "_blank");
+}
+
+function setDevicePreview(device) {
+  devicePreview.value = device === devicePreview.value ? undefined : device;
+  updatePreviewStyles();
+}
+
+async function updatePreviewStyles() {
+  // Wait for container to have the updated size
+  await nextTick();
+
+  if (
+    !container.value ||
+    !devicePreview.value ||
+    !(devicePreview.value in DEVICE_VIEWPORT_PRESETS)
+  ) {
+    return;
+  }
+
+  const deviceWidth = DEVICE_VIEWPORT_PRESETS[devicePreview.value];
+  const containerWidth = container.value.clientWidth;
+  const containerHeight = container.value.clientHeight;
+
+  const scale = containerWidth / deviceWidth;
+
+  previewIframeStyles.value = {
+    width: `${deviceWidth}px`,
+    height: `${containerHeight / scale}px`,
+    transform: `scale(${scale})`,
+    transformOrigin: "top center",
+    position: "absolute",
+    top: 0,
+    left: "50%",
+    // Offset by half the width for perfect centering
+    marginLeft: `${-deviceWidth / 2}px`,
+  };
 }
 
 async function renderPreview(content, { persistScrollPosition = true } = {}) {
@@ -291,6 +341,10 @@ async function handleMessage({ data }) {
     }
   }
 }
+
+function uppercaseFirst(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 </script>
 
 <template>
@@ -304,6 +358,36 @@ async function handleMessage({ data }) {
         pricing-url="https://kirby.tools/live-preview#pricing"
       />
 
+      <k-button-group layout="collapsed">
+        <k-button
+          v-for="device in Object.keys(DEVICE_VIEWPORT_PRESETS)"
+          :key="device"
+          variant="filled"
+          :theme="devicePreview === device ? 'blue' : undefined"
+          size="xs"
+          :title="uppercaseFirst(device)"
+          :icon="
+            device === 'mobile'
+              ? 'mobile'
+              : device === 'tablet'
+                ? 'tablet'
+                : 'display'
+          "
+          :style="{
+            paddingInline: 'calc(var(--input-padding)*2)',
+          }"
+          @click="setDevicePreview(device)"
+        />
+      </k-button-group>
+
+      <k-button
+        variant="filled"
+        size="xs"
+        icon="open"
+        :title="panel.t('open')"
+        :disabled="!blobUrl"
+        @click="openPreviewInTab()"
+      />
       <k-button
         variant="filled"
         size="xs"
@@ -320,6 +404,7 @@ async function handleMessage({ data }) {
         transitionBlobUrl && !hasError && 'k-shadow-md',
         (!transitionBlobUrl || hasError) &&
           'klp-border klp-border-dashed klp-border-[var(--preview-color-border)]',
+        devicePreview && 'klp-relative klp-overflow-hidden',
       ]"
       :style="{
         '--preview-color-border': _isKirby5
@@ -335,30 +420,44 @@ async function handleMessage({ data }) {
         v-if="transitionBlobUrl"
         ref="transitionIframe"
         :src="transitionBlobUrl"
-        class="klp-h-full klp-w-full klp-rounded-[var(--input-rounded)] klp-bg-[var(--input-color-back)]"
+        class="klp-rounded-[var(--input-rounded)] klp-bg-[var(--input-color-back)]"
         :class="[hasError && 'klp-pointer-events-none klp-opacity-0']"
         :style="{
-          gridArea: '1 / 1 / 1 / 1',
+          gridArea: '1 / 1',
+          ...(devicePreview
+            ? previewIframeStyles
+            : {
+                width: '100%',
+                height: '100%',
+                transform: 'none',
+              }),
         }"
       />
       <iframe
         v-if="blobUrl"
         ref="iframe"
         :src="blobUrl"
-        class="klp-h-full klp-w-full klp-rounded-[var(--input-rounded)] klp-bg-[var(--input-color-back)]"
+        class="klp-rounded-[var(--input-rounded)] klp-bg-[var(--input-color-back)]"
         :class="[
           (showTransitionIframe || hasError) &&
             'klp-pointer-events-none klp-opacity-0',
         ]"
         :style="{
-          gridArea: '1 / 1 / 1 / 1',
+          gridArea: '1 / 1',
+          ...(devicePreview
+            ? previewIframeStyles
+            : {
+                width: '100%',
+                height: '100%',
+                transform: 'none',
+              }),
         }"
       />
       <div
         v-if="hasError"
         class="klp-flex klp-items-center klp-justify-center"
         :style="{
-          gridArea: '1 / 1 / 1 / 1',
+          gridArea: '1 / 1',
         }"
       >
         <k-button

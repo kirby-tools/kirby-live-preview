@@ -9,7 +9,7 @@ return [
             'label' => fn ($label = null) => I18n::translate($label, $label),
             'pageId' => fn ($pageId = null) => is_string($pageId) ? $pageId : null,
             'updateStrategy' => fn ($updateStrategy = null) => in_array($updateStrategy, ['interval', 'blur'], true) ? $updateStrategy : 'interval',
-            'updateInterval' => function ($updateInterval = 250) {
+            'updateInterval' => function ($updateInterval = 500) {
                 if ($updateInterval === false) {
                     return false;
                 }
