@@ -423,7 +423,7 @@ function uppercaseFirst(string) {
         class="klp-rounded-[var(--input-rounded)] klp-bg-[var(--input-color-back)]"
         :class="[hasError && 'klp-pointer-events-none klp-opacity-0']"
         :style="{
-          gridArea: '1 / 1',
+          gridArea: '1 / 1 / 1 / 1',
           ...(devicePreview
             ? previewIframeStyles
             : {
@@ -443,7 +443,7 @@ function uppercaseFirst(string) {
             'klp-pointer-events-none klp-opacity-0',
         ]"
         :style="{
-          gridArea: '1 / 1',
+          gridArea: '1 / 1 / 1 / 1',
           ...(devicePreview
             ? previewIframeStyles
             : {
@@ -457,7 +457,7 @@ function uppercaseFirst(string) {
         v-if="hasError"
         class="klp-flex klp-items-center klp-justify-center"
         :style="{
-          gridArea: '1 / 1',
+          gridArea: '1 / 1 / 1 / 1',
         }"
       >
         <k-button
