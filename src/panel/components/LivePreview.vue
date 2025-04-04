@@ -60,6 +60,7 @@ const hasError = ref(false);
 const blobUrl = ref();
 const transitionBlobUrl = ref();
 const devicePreview = ref();
+const isInsetDevicePreview = ref(false);
 const previewIframeStyles = ref({});
 const licenseStatus = ref();
 
@@ -217,19 +218,21 @@ async function updatePreviewStyles() {
     !devicePreview.value ||
     !(devicePreview.value in DEVICE_VIEWPORT_PRESETS)
   ) {
+    isInsetDevicePreview.value = false;
     return;
   }
 
   const deviceWidth = DEVICE_VIEWPORT_PRESETS[devicePreview.value];
   const containerWidth = container.value.clientWidth;
   const containerHeight = container.value.clientHeight;
-
   const scale = containerWidth / deviceWidth;
+
+  isInsetDevicePreview.value = deviceWidth < containerWidth;
 
   previewIframeStyles.value = {
     width: `${deviceWidth}px`,
-    height: `${containerHeight / scale}px`,
-    transform: `scale(${scale})`,
+    height: scale < 1 ? `${containerHeight / scale}px` : "100%",
+    transform: scale < 1 ? `scale(${scale})` : "none",
     transformOrigin: "top center",
     position: "absolute",
     top: 0,
@@ -401,10 +404,14 @@ function uppercaseFirst(string) {
       class="klp-grid klp-min-h-[55dvh] klp-rounded-[var(--input-rounded)]"
       :class="[
         isRendering && 'klp-pointer-events-none',
-        transitionBlobUrl && !hasError && 'k-shadow-md',
+        transitionBlobUrl &&
+          !hasError &&
+          !isInsetDevicePreview &&
+          'k-shadow-md',
         (!transitionBlobUrl || hasError) &&
           'klp-border klp-border-dashed klp-border-[var(--preview-color-border)]',
-        devicePreview && 'klp-relative klp-overflow-hidden',
+        // Allow for overflow shadow for inset device preview
+        devicePreview && 'klp-relative klp-overflow-visible',
       ]"
       :style="{
         '--preview-color-border': _isKirby5
@@ -421,7 +428,13 @@ function uppercaseFirst(string) {
         ref="transitionIframe"
         :src="transitionBlobUrl"
         class="klp-rounded-[var(--input-rounded)] klp-bg-[var(--input-color-back)]"
-        :class="[hasError && 'klp-pointer-events-none klp-opacity-0']"
+        :class="[
+          hasError && 'klp-pointer-events-none klp-opacity-0',
+          showTransitionIframe &&
+            !hasError &&
+            isInsetDevicePreview &&
+            'k-shadow-md',
+        ]"
         :style="{
           gridArea: '1 / 1 / 1 / 1',
           ...(devicePreview
@@ -441,6 +454,10 @@ function uppercaseFirst(string) {
         :class="[
           (showTransitionIframe || hasError) &&
             'klp-pointer-events-none klp-opacity-0',
+          !showTransitionIframe &&
+            !hasError &&
+            isInsetDevicePreview &&
+            'k-shadow-md',
         ]"
         :style="{
           gridArea: '1 / 1 / 1 / 1',
