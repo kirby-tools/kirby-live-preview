@@ -28,6 +28,20 @@ columns:
 
   - width: 1/2
     sections:
+      meta:
+        type: fields
+        fields:
+          cover: fields/cover
+          date:
+            type: date
+            time: true
+            default: now
+          author:
+            type: users
+          tags: true
+      files:
+        type: files
+        template: blocks/image
       content:
         type: fields
         fields:
