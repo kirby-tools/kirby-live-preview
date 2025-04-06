@@ -140,8 +140,8 @@ final class LivePreview
             'language' => $this->kirby->languageCode()
         ]);
 
-        $model->content()->update($form->strings());
-        $model->content()->update(['previewMode' => 'true']);
+        $this->updateModelContent($model, $form->strings());
+        $this->updateModelContent($model, ['previewMode' => 'true']);
 
         $this->processWriterFields($model);
 
@@ -161,9 +161,30 @@ final class LivePreview
         foreach (array_keys($writerFields) as $key) {
             $field = $model->content()->get($key);
             $field = $field->permalinksToUrls();
-            $model->content()->update([
+
+            $this->updateModelContent($model, [
                 $key => $field->value()
             ]);
+        }
+    }
+
+    /**
+     * Updates a model's content with compatibility for both Kirby 4 and Kirby 5
+     */
+    private function updateModelContent(ModelWithContent $model, array $data): void
+    {
+        // Use version API (Kirby 5) if available
+        if (method_exists($model, 'version')) {
+            // Prevent changes from being written to disk during preview
+            if (!($model->storage() instanceof \Kirby\Content\MemoryStorage)) {
+                $model = $model->changeStorage(\Kirby\Content\MemoryStorage::class, copy: true);
+            }
+
+            // Update content data through the version API
+            $model->version()->update($data);
+        } else {
+            // Fallback for Kirby 4
+            $model->content()->update($data);
         }
     }
 
