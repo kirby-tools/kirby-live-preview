@@ -436,7 +436,7 @@ function uppercaseFirst(string) {
             'k-shadow-md',
         ]"
         :style="{
-          gridArea: '1 / 1 / 1 / 1',
+          gridArea: '1 / 1 / 2 / 2',
           ...(devicePreview
             ? previewIframeStyles
             : {
@@ -460,7 +460,7 @@ function uppercaseFirst(string) {
             'k-shadow-md',
         ]"
         :style="{
-          gridArea: '1 / 1 / 1 / 1',
+          gridArea: '1 / 1 / 2 / 2',
           ...(devicePreview
             ? previewIframeStyles
             : {
@@ -474,7 +474,7 @@ function uppercaseFirst(string) {
         v-if="hasError"
         class="klp-flex klp-items-center klp-justify-center"
         :style="{
-          gridArea: '1 / 1 / 1 / 1',
+          gridArea: '1 / 1 / 2 / 2',
         }"
       >
         <k-button
