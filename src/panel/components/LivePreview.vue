@@ -491,7 +491,9 @@ function uppercaseFirst(string) {
       </div>
     </div>
 
-    <k-text v-if="help" class="k-help klp-mt-2" :html="help" />
+    <footer v-if="help" class="klp-mt-[var(--spacing-2)]">
+      <k-text class="k-help" :html="help" />
+    </footer>
   </k-section>
 </template>
 

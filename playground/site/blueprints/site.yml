@@ -16,6 +16,7 @@ columns:
           - **Panel redirects**: Site links in the preview will open the corresponding page in the Panel.
           - **Section behavior**: Place the preview section where you need it. It will match the surrounding layout.
         theme: positive
+
   - width: 1/3
     fields:
       infoDocumentation:
