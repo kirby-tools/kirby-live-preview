@@ -197,7 +197,7 @@ final class LivePreview
         $head = $dom->query('/html/head')[0];
 
         if (!$head) {
-            throw new InvalidArgumentException('The HTML template requires a <head> tag for the live preview to work properly.');
+            throw new InvalidArgumentException('The HTML template requires a <head> tag for the live preview. Please check your template.');
         }
 
         // Add `data-preview-mode` attribute to the root element
