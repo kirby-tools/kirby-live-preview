@@ -7,7 +7,7 @@ status:
   listed: true
 
 options:
-  preview: https://kirby.tools/live-preview#pricing
+  preview: https://kirby.tools/live-preview/buy
 
 columns:
   - width: 1/3

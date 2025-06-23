@@ -16,7 +16,7 @@ status:
     text: The note is online and listed in the blog
 
 options:
-  preview: https://kirby.tools/live-preview#pricing
+  preview: https://kirby.tools/live-preview/buy
 
 columns:
   - width: 1/2

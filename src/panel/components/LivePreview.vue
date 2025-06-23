@@ -358,7 +358,7 @@ function uppercaseFirst(string) {
         label="Kirby Live Preview"
         api-namespace="__live-preview__"
         :license-status="licenseStatus"
-        pricing-url="https://kirby.tools/live-preview#pricing"
+        pricing-url="https://kirby.tools/live-preview/buy"
       />
 
       <k-button-group layout="collapsed">

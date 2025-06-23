@@ -12,7 +12,7 @@ status:
     text: The page is listed in the main menu
 
 options:
-  preview: https://kirby.tools/live-preview#pricing
+  preview: https://kirby.tools/live-preview/buy
 
 columns:
   main:
