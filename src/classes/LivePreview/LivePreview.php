@@ -142,7 +142,7 @@ final class LivePreview
 
         // TODO: Migrate to `toStoredValues` method in Kirby 5
         $this->updateModelContent($model, $form->strings());
-        $this->updateModelContent($model, [`previewMode' => 'true']);
+        $this->updateModelContent($model, ['previewMode' => 'true']);
 
         $this->processWriterFields($model);
 
