@@ -4,6 +4,7 @@ use Kirby\Cms\App as Kirby;
 
 @include_once __DIR__ . '/vendor/autoload.php';
 
+$packageName = 'johannschopplich/kirby-live-preview';
 $pluginConfig = [
     'name' => 'johannschopplich/live-preview',
     'extends' => [
@@ -13,13 +14,16 @@ $pluginConfig = [
     ]
 ];
 
-if (class_exists('\Kirby\Plugin\License')) {
+if (class_exists('Kirby\Plugin\License')) {
+    $pluginConfig['extends']['areas'] = [
+        'system' => fn () => [
+            'dialogs' => \JohannSchopplich\Licensing\PluginLicenseExtensions::dialogs($packageName, 'Kirby Live Preview')
+        ]
+    ];
+
     Kirby::plugin(
         ...$pluginConfig,
-        license: fn ($plugin) => new \JohannSchopplich\Licensing\PluginLicense(
-            plugin: $plugin,
-            packageName: 'johannschopplich/kirby-live-preview'
-        )
+        license: fn ($plugin) => new \JohannSchopplich\Licensing\PluginLicense($plugin, $packageName)
     );
 } else {
     Kirby::plugin(...$pluginConfig);

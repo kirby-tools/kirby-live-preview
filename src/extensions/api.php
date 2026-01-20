@@ -1,11 +1,13 @@
 <?php
 
 use JohannSchopplich\Licensing\Licenses;
+use JohannSchopplich\Licensing\PluginLicenseExtensions;
 use JohannSchopplich\LivePreview\LivePreview;
 use Kirby\Cms\App;
 
 return [
     'routes' => fn (App $kirby) => [
+        ...PluginLicenseExtensions::api('johannschopplich/kirby-live-preview'),
         [
             'pattern' => '__live-preview__/context',
             'method' => 'GET',
@@ -37,14 +39,6 @@ return [
                     'code' => 200,
                     'data' => $html
                 ];
-            }
-        ],
-        [
-            'pattern' => '__live-preview__/activate',
-            'method' => 'POST',
-            'action' => function () {
-                $licenses = Licenses::read('johannschopplich/kirby-live-preview');
-                return $licenses->activateFromRequest();
             }
         ]
     ]
