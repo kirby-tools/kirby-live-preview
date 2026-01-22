@@ -7,11 +7,11 @@ namespace Composer\Autoload;
 class ComposerStaticInit1af33e02a708d1048f339321d19bdc56
 {
     public static $prefixLengthsPsr4 = array (
-        'K' => 
+        'K' =>
         array (
             'Kirby\\' => 6,
         ),
-        'J' => 
+        'J' =>
         array (
             'JohannSchopplich\\Licensing\\' => 27,
             'JohannSchopplich\\' => 17,
@@ -19,15 +19,15 @@ class ComposerStaticInit1af33e02a708d1048f339321d19bdc56
     );
 
     public static $prefixDirsPsr4 = array (
-        'Kirby\\' => 
+        'Kirby\\' =>
         array (
             0 => __DIR__ . '/..' . '/getkirby/composer-installer/src',
         ),
-        'JohannSchopplich\\Licensing\\' => 
+        'JohannSchopplich\\Licensing\\' =>
         array (
             0 => __DIR__ . '/..' . '/johannschopplich/kirby-tools-licensing/src',
         ),
-        'JohannSchopplich\\' => 
+        'JohannSchopplich\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src/classes',
         ),
@@ -37,8 +37,10 @@ class ComposerStaticInit1af33e02a708d1048f339321d19bdc56
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'JohannSchopplich\\Licensing\\Http\\HttpClientInterface' => __DIR__ . '/..' . '/johannschopplich/kirby-tools-licensing/src/Http/HttpClientInterface.php',
         'JohannSchopplich\\Licensing\\Http\\KirbyHttpClient' => __DIR__ . '/..' . '/johannschopplich/kirby-tools-licensing/src/Http/KirbyHttpClient.php',
+        'JohannSchopplich\\Licensing\\LicenseStatus' => __DIR__ . '/..' . '/johannschopplich/kirby-tools-licensing/src/LicenseStatus.php',
         'JohannSchopplich\\Licensing\\Licenses' => __DIR__ . '/..' . '/johannschopplich/kirby-tools-licensing/src/Licenses.php',
         'JohannSchopplich\\Licensing\\PluginLicense' => __DIR__ . '/..' . '/johannschopplich/kirby-tools-licensing/src/PluginLicense.php',
+        'JohannSchopplich\\Licensing\\PluginLicenseExtensions' => __DIR__ . '/..' . '/johannschopplich/kirby-tools-licensing/src/PluginLicenseExtensions.php',
         'JohannSchopplich\\LivePreview\\LivePreview' => __DIR__ . '/../..' . '/src/classes/LivePreview/LivePreview.php',
         'Kirby\\ComposerInstaller\\CmsInstaller' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/CmsInstaller.php',
         'Kirby\\ComposerInstaller\\Installer' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/Installer.php',
