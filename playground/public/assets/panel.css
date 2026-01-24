@@ -3,6 +3,6 @@
 }
 
 .k-panel-menu,
-.k-panel-menu-proxy /* , .k-topbar */ {
+.k-panel-menu-proxy {
   display: none;
 }
