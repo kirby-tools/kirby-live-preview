@@ -2,7 +2,14 @@
 
 # Kirby Live Preview
 
-The Live Preview Panel section renders your content in real-time as you type. It provides a live preview with unsaved changes, allowing you to see how your content will look before saving it. The Live Preview Panel is a powerful tool for content creators, editors, and developers.
+The Live Preview plugin renders your content in real-time as you type. Display your page with unsaved changes and simulate different screen sizes to see how your content will look on mobile, tablet, and desktop.
+
+## Features
+
+- 🖥️ **Real-Time Preview**: See how your page looks before saving your changes and without leaving the Panel.
+- 📱 **Device Screen Sizes**: Simulate different screen sizes to see how your content will look on mobile, tablet, and desktop.
+- 🔍 **Detect Preview Mode**: Conditionally hide elements, such as a cookie banner, or turn off animations in the rendered preview page.
+- 🔗 **Panel Redirects**: Clicking inside the preview opens the corresponding Panel page instead of following the link.
 
 ## Licensing
 
