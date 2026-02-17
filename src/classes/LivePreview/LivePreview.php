@@ -78,7 +78,22 @@ final class LivePreview
         // For live preview of site content, we have to slightly change the `controller` method
         $this->kirby->data = $this->resolveTemplateData($page, 'html');
 
-        return $template->render($this->kirby->data);
+        // Trigger the `page.render:before` hook to match Kirby's native rendering pipeline
+        $this->kirby->data = $this->kirby->apply('page.render:before', [
+            'contentType' => 'html',
+            'data'        => $this->kirby->data,
+            'page'        => $page
+        ], 'data');
+
+        $html = $template->render($this->kirby->data);
+
+        // Trigger the `page.render:after` hook
+        return $this->kirby->apply('page.render:after', [
+            'contentType' => 'html',
+            'data'        => $this->kirby->data,
+            'html'        => $html,
+            'page'        => $page
+        ], 'html');
     }
 
     /**
