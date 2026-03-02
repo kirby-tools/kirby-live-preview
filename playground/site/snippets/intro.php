@@ -10,7 +10,7 @@
 
   More about snippets:
   https://getkirby.com/docs/guide/templates/snippets
-*/
+ */
 ?>
 <header class="h1">
   <h1><?= $page->headline()->or($page->title())->esc() ?></h1>

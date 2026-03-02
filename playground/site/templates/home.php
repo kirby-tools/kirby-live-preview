@@ -16,7 +16,7 @@
   multiple templates. They also help to keep templates clean.
 
   More about templates: https://getkirby.com/docs/guide/templates/basics
-*/
+ */
 
 ?>
 <?php snippet('header') ?>
@@ -26,7 +26,7 @@
     We always use an if-statement to check if a page exists to
     prevent errors in case the page was deleted or renamed before
     we call a method like `children()` in this case
-  */
+   */
 ?>
   <?php if ($photographyPage = page('photography')): ?>
   <ul class="home-grid">
@@ -42,7 +42,7 @@
 
           We can automatically resize images to a useful
           size with Kirby's built-in image manipulation API
-        */
+         */
         ?>
           <?php if ($cover = $album->cover()): ?>
           <img src="<?= $cover->resize(1024, 1024)->url() ?>" alt="<?= $cover->alt()->esc() ?>">

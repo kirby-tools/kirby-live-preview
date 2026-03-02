@@ -9,7 +9,7 @@
 
   More about snippets:
   https://getkirby.com/docs/guide/templates/snippets
-*/
+ */
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,7 +22,7 @@
   /*
     In the title tag we show the title of our
     site and the title of the current page
-  */
+   */
 ?>
   <title><?= $site->title()->esc() ?> | <?= $page->title()->esc() ?></title>
 
@@ -31,7 +31,7 @@
   Stylesheets can be included using the `css()` helper.
   Kirby also provides the `js()` helper to include script file.
   More Kirby helpers: https://getkirby.com/docs/reference/templates/helpers
-*/
+ */
 ?>
   <?= css([
       'assets/css/prism.css',
@@ -45,7 +45,7 @@
   The `url()` helper is a great way to create reliable
   absolute URLs in Kirby that always start with the
   base URL of your site.
-*/
+ */
 ?>
   <link rel="shortcut icon" type="image/x-icon" href="<?= url('favicon.ico') ?>">
 </head>
@@ -57,7 +57,7 @@
     We use `$site->url()` to create a link back to the homepage
     for the logo and `$site->title()` as a temporary logo. You
     probably want to replace this with an SVG.
-  */
+   */
 ?>
     <a class="logo" href="<?= $site->url() ?>">
       <?= $site->title()->esc() ?>
@@ -75,7 +75,7 @@
 
     More about page status:
     https://getkirby.com/docs/reference/panel/blueprints/page#statuses
-  */
+   */
 ?>
       <?php foreach ($site->children()->listed() as $item): ?>
       <a <?php e($item->isOpen(), 'aria-current="page"') ?> href="<?= $item->url() ?>"><?= $item->title()->esc() ?></a>

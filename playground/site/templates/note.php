@@ -19,7 +19,7 @@
   multiple templates. They also help to keep templates clean.
 
   More about templates: https://getkirby.com/docs/guide/templates/basics
-*/
+ */
 ?>
 <?php snippet('header') ?>
 

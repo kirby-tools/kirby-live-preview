@@ -10,7 +10,7 @@
 
   More about snippets:
   https://getkirby.com/docs/guide/templates/snippets
-*/
+ */
 ?>
 <nav class="blog-prevnext">
   <h2 class="h2">Keep on reading</h2>

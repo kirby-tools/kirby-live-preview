@@ -9,7 +9,7 @@
 
   More about snippets:
   https://getkirby.com/docs/guide/templates/snippets
-*/
+ */
 ?>
 <span class="social">
   <a href="https://mastodon.social/@getkirby" aria-label="Follow us on Mastodon">

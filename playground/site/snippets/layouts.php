@@ -8,7 +8,7 @@
 
   More about snippets:
   https://getkirby.com/docs/guide/templates/snippets
-*/
+ */
 ?>
 <?php foreach ($field->toLayouts() as $layout): ?>
 <section class="grid margin-xl" id="<?= esc($layout->id(), 'attr') ?>" style="--gutter: 1.5rem">

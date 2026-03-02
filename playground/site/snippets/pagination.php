@@ -8,7 +8,7 @@
 
   More about snippets:
   https://getkirby.com/docs/guide/templates/snippets
-*/
+ */
 ?>
 <?php if ($pagination->hasPages()): ?>
 <nav class="pagination">

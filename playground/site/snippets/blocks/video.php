@@ -10,7 +10,7 @@
 
   More about snippets:
   https://getkirby.com/docs/guide/templates/snippets
-*/
+ */
 ?>
 <?php if ($block->url()->isNotEmpty()): ?>
 <figure>

@@ -7,7 +7,7 @@
 
   More about snippets:
   https://getkirby.com/docs/guide/templates/snippets
-*/
+ */
 ?>
 <article class="note-excerpt">
   <a href="<?= $note->url() ?>">

@@ -11,7 +11,7 @@
 
   More about snippets:
   https://getkirby.com/docs/guide/templates/snippets
-*/
+ */
 
 $src = null;
 
