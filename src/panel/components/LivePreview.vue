@@ -326,7 +326,7 @@ async function handleMessage({ data }) {
 
     if (path) {
       // Replace Kirby path parameters, like `notes/tag:sky`
-      // eslint-disable-next-line e18e/prefer-static-regex, regexp/no-super-linear-backtracking
+      // eslint-disable-next-line regexp/no-super-linear-backtracking
       path = path.replace(/\/[^/]+?:.+$/, "");
       path = joinURL("pages", path.replaceAll("/", "+"));
     } else {
