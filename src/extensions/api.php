@@ -1,7 +1,7 @@
 <?php
 
-use JohannSchopplich\Licensing\Licenses;
 use JohannSchopplich\Licensing\LicensePanel;
+use JohannSchopplich\Licensing\Licenses;
 use JohannSchopplich\LivePreview\LivePreview;
 use Kirby\Cms\App;
 
