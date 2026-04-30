@@ -1,5 +1,5 @@
 import LivePreview from "./components/LivePreview.vue";
-import "./index.css";
+import "virtual:uno.css";
 
 window.panel.plugin("johannschopplich/live-preview", {
   sections: {
