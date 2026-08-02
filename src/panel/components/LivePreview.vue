@@ -103,7 +103,7 @@ const containerHeight = computed(
   () =>
     `calc(100dvh - ${
       isTopbarVisible.value
-        ? // Substract topbar bottom margin
+        ? // Subtract the topbar's bottom margin
           `calc(${topbarHeight.value}px + 5.75rem)`
         : // Sticky columns have applied `top: calc(var(--header-sticky-offset) + 2vh)`
           "2vh"
@@ -131,10 +131,9 @@ const containerHeight = computed(
     // eslint-disable-next-line no-undef
     __PLAYGROUND__ ? "active" : context.licenseStatus;
 
-  // Update interval can be `false`, so we use the default value of `500`
+  // Update interval can be `false`, so fall back to the default of `500`
   throttledRenderPreview = throttle(renderPreview, updateInterval.value || 500);
 
-  // Lazily render the preview
   renderUnsavedContent();
 
   // Equals the `mounted` lifecycle hook
@@ -250,7 +249,6 @@ async function renderPreview(content, { persistScrollPosition = true } = {}) {
 
   if (iframe.value) {
     scrollPosition = iframe.value.contentWindow.scrollY;
-    // Set scroll position on transition iframe
     transitionIframe.value?.contentWindow?.scrollTo(0, scrollPosition);
   }
 
@@ -274,7 +272,6 @@ async function renderPreview(content, { persistScrollPosition = true } = {}) {
       iframe.value.addEventListener(
         "load",
         () => {
-          // Restore scroll position
           if (scrollPosition && persistScrollPosition) {
             iframe.value.contentWindow.scrollTo(0, scrollPosition);
           }

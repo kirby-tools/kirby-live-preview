@@ -46,9 +46,6 @@ final class LivePreview
         $this->plugin = $plugin;
     }
 
-    /**
-     * Renders a preview version of a page with the given content.
-     */
     public function render(array $content = [], bool $interactable = true): string
     {
         $this->content = $content;
@@ -59,9 +56,6 @@ final class LivePreview
         return $this->processHtml($html, $interactable);
     }
 
-    /**
-     * Creates a preview version of the page with updated content.
-     */
     private function createPreviewModel(ModelWithContent $model, array $content): Site|Page
     {
         $model = $model->clone();
@@ -82,7 +76,7 @@ final class LivePreview
     }
 
     /**
-     * Processes writer fields to resolve permalinks.
+     * Rewrites the permalinks of all writer fields to public URLs.
      */
     private function processWriterFields(ModelWithContent $model): void
     {
@@ -101,9 +95,6 @@ final class LivePreview
         }
     }
 
-    /**
-     * Renders the page template with controller data.
-     */
     private function renderTemplate(Page $page): string
     {
         $template = $page->template();
@@ -114,13 +105,10 @@ final class LivePreview
             ]);
         }
 
-        // The following line is the original code from the `render` method:
-        // $this->kirby->data = $page->controller($controllerData, 'html');
-
-        // For live preview of site content, we have to slightly change the `controller` method
+        // Stands in for Kirby's `$page->controller()` call, which cannot inject unsaved site content
         $this->kirby->data = $this->resolveTemplateData($page, 'html');
 
-        // Trigger the `page.render:before` hook to match Kirby's native rendering pipeline
+        // Mirror Kirby's native rendering pipeline, so hooks fire for the preview as well
         $this->kirby->data = $this->kirby->apply('page.render:before', [
             'contentType' => 'html',
             'data'        => $this->kirby->data,
@@ -129,7 +117,6 @@ final class LivePreview
 
         $html = $template->render($this->kirby->data);
 
-        // Trigger the `page.render:after` hook
         return $this->kirby->apply('page.render:after', [
             'contentType' => 'html',
             'data'        => $this->kirby->data,
@@ -139,9 +126,8 @@ final class LivePreview
     }
 
     /**
-     * Call the page controller.
-     *
-     * @description This is a modified version of the original `controller` method from Kirby's `Page` class to support injecting unsaved content for site-level previews
+     * Modified version of the `controller` method from Kirby's `Page` class that
+     * injects unsaved content into the `site` model for site-level previews.
      */
     private function resolveTemplateData(Page $page, string $contentType = 'html'): array
     {
@@ -185,7 +171,7 @@ final class LivePreview
     }
 
     /**
-     * Processes the rendered HTML to add preview-specific modifications.
+     * Applies the preview-specific modifications to the rendered HTML.
      */
     private function processHtml(string $html, bool $interactable): string
     {
@@ -196,23 +182,21 @@ final class LivePreview
             throw new InvalidArgumentException('The HTML template requires a <head> tag for the live preview. Please check your template.');
         }
 
-        // Add `data-preview-mode` attribute to the root element
         $dom->document()->documentElement->setAttribute('data-preview-mode', 'true');
 
-        // Inject script to catch all links and send them to the parent window
+        // Forwards link clicks and save shortcuts to the Panel in the parent window
         $script = $dom->document()->createElement('script');
         $script->setAttribute('type', 'module');
         $script->setAttribute('src', $this->plugin->asset('iframe.js')->url());
         $dom->body()->appendChild($script);
 
-        // Inject `<base>` tag for relative URLs
+        // Relative URLs have to resolve against the site, not the blob URL the Panel renders the preview from
         if ($head->getElementsByTagName('base')->length === 0) {
             $base = $dom->document()->createElement('base');
             $base->setAttribute('href', $this->kirby->site()->url($this->kirby->languageCode()));
             $head->insertBefore($base, $head->firstChild);
         }
 
-        // If interactions should be disabled, disable all pointer events
         if (!$interactable) {
             $style = $dom->document()->createElement('style', '* { pointer-events: none !important; }');
             $head->appendChild($style);
@@ -220,22 +204,21 @@ final class LivePreview
 
         return $dom->toString();
     }
+
     /**
-     * Updates a model's content with compatibility for both Kirby 4 and Kirby 5.
+     * Updates a model's content through the Kirby 5 version API, falling back to
+     * the content API for Kirby 4.
      */
     private function updateModelContent(ModelWithContent $model, array $data): void
     {
-        // Use version API (Kirby 5) if available
         if (method_exists($model, 'version')) {
             // Prevent changes from being written to disk during preview
             if (!($model->storage() instanceof \Kirby\Content\MemoryStorage)) {
                 $model = $model->changeStorage(\Kirby\Content\MemoryStorage::class, copy: true);
             }
 
-            // Update content data through the version API
             $model->version()->update($data);
         } else {
-            // Fallback for Kirby 4
             $model->content()->update($data);
         }
     }

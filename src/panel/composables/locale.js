@@ -9,7 +9,6 @@ export function useLocale() {
     const _url = url instanceof URL ? url : new URL(url);
     const parts = _url.pathname.split("/").filter(Boolean);
 
-    // Remove locale prefix from path
     if (locales.includes(parts[0])) {
       parts.shift();
     }

@@ -9,12 +9,11 @@ document.addEventListener("click", (event) => {
       return;
     }
 
-    // Ignore links containing a hash
+    // In-page anchors have to stay inside the preview
     if (url.hash) {
       return;
     }
 
-    // Ignore links that contain a `data-preview-ignore` attribute
     if (link.dataset.previewIgnore !== undefined) {
       return;
     }
