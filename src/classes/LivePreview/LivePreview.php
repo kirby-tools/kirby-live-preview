@@ -47,7 +47,7 @@ final class LivePreview
     }
 
     /**
-     * Renders a preview version of a page with the given content
+     * Renders a preview version of a page with the given content.
      */
     public function render(array $content = [], bool $interactable = true): string
     {
@@ -60,7 +60,7 @@ final class LivePreview
     }
 
     /**
-     * Renders the page template with controller data
+     * Renders the page template with controller data.
      */
     private function renderTemplate(Page $page): string
     {
@@ -97,7 +97,7 @@ final class LivePreview
     }
 
     /**
-     * Call the page controller
+     * Call the page controller.
      *
      * @description This is a modified version of the original `controller` method from Kirby's `Page` class to support injecting unsaved content for site-level previews
      */
@@ -143,7 +143,7 @@ final class LivePreview
     }
 
     /**
-     * Creates a preview version of the page with updated content
+     * Creates a preview version of the page with updated content.
      */
     private function createPreviewModel(ModelWithContent $model, array $content): Site|Page
     {
@@ -165,7 +165,7 @@ final class LivePreview
     }
 
     /**
-     * Processes writer fields to resolve permalinks
+     * Processes writer fields to resolve permalinks.
      */
     private function processWriterFields(ModelWithContent $model): void
     {
@@ -185,7 +185,7 @@ final class LivePreview
     }
 
     /**
-     * Updates a model's content with compatibility for both Kirby 4 and Kirby 5
+     * Updates a model's content with compatibility for both Kirby 4 and Kirby 5.
      */
     private function updateModelContent(ModelWithContent $model, array $data): void
     {
@@ -205,7 +205,7 @@ final class LivePreview
     }
 
     /**
-     * Processes the rendered HTML to add preview-specific modifications
+     * Processes the rendered HTML to add preview-specific modifications.
      */
     private function processHtml(string $html, bool $interactable): string
     {
