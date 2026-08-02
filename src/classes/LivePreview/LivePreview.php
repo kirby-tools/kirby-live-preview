@@ -150,7 +150,7 @@ final class LivePreview
             $contentType
         );
 
-        if (!empty($controllerData)) {
+        if ($controllerData !== []) {
             $classes = [
                 'kirby' => App::class,
                 'site'  => Site::class,
@@ -224,5 +224,4 @@ final class LivePreview
             $model->content()->update($data);
         }
     }
-
 }
