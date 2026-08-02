@@ -9,7 +9,7 @@ document.addEventListener("click", (event) => {
       return;
     }
 
-    // In-page anchors have to stay inside the preview
+    // Links with a fragment are left to the browser so the target scrolls inside the preview instead of navigating the Panel
     if (url.hash) {
       return;
     }

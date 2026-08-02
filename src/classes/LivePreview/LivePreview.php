@@ -126,8 +126,10 @@ final class LivePreview
     }
 
     /**
-     * Modified version of the `controller` method from Kirby's `Page` class that
-     * injects unsaved content into the `site` model for site-level previews.
+     * Resolves the template data for the given page.
+     *
+     * Modified version of Kirby's `Page::controller()` that injects unsaved
+     * content into the `site` model for site-level previews.
      */
     private function resolveTemplateData(Page $page, string $contentType = 'html'): array
     {
