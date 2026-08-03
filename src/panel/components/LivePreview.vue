@@ -167,8 +167,6 @@ const containerHeight = computed(
   window.addEventListener("message", handleMessage, {
     signal: eventsController.signal,
   });
-  panel.events.on("page.changeTitle", renderUnsavedContent);
-  panel.events.on("file.sort", renderUnsavedContent);
 
   if (updateStrategy.value === "blur") {
     document.body.addEventListener(
@@ -182,6 +180,13 @@ const containerHeight = computed(
     );
   }
 })();
+
+// Registered outside the async setup above: unmounting before it resolves
+// would run `off` first, leaving the listeners behind for good. The
+// `eventsController` listeners heal themselves – an aborted signal makes
+// `addEventListener` a no-op – but Kirby's emitter takes no signal
+panel.events.on("page.changeTitle", renderUnsavedContent);
+panel.events.on("file.sort", renderUnsavedContent);
 
 onBeforeUnmount(() => {
   eventsController.abort();
