@@ -1,4 +1,4 @@
-// Pass any link clicks to the parent window
+// Passes link clicks to the parent window.
 document.addEventListener("click", (event) => {
   const link = event.target.closest("a");
 
@@ -9,7 +9,7 @@ document.addEventListener("click", (event) => {
       return;
     }
 
-    // Links with a fragment are left to the browser so the target scrolls inside the preview instead of navigating the Panel
+    // Links with a fragment are left to the browser so the target scrolls inside the preview instead of navigating the Panel.
     if (url.hash) {
       return;
     }
@@ -29,7 +29,7 @@ document.addEventListener("click", (event) => {
   }
 });
 
-// Catch all Cmd+S events and pass them to the parent window
+// Catches all Cmd+S events and passes them to the parent window.
 document.addEventListener("keydown", (event) => {
   if (event.key === "s" && (event.metaKey || event.ctrlKey)) {
     event.preventDefault();

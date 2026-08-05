@@ -42,7 +42,7 @@ const DEVICE_VIEWPORT_PRESETS = {
   desktop: 1440,
 };
 
-// Section props
+// #region Section props
 const label = ref();
 const pageId = ref();
 const updateInterval = ref();
@@ -50,10 +50,10 @@ const interactable = ref();
 const aspectRatio = ref();
 const updateStrategy = ref();
 
-// Section computed
 const help = ref();
+// #endregion
 
-// Runtime state
+// #region Runtime state
 const isRendering = ref(false);
 const showTransitionIframe = ref(false);
 const hasError = ref(false);
@@ -64,15 +64,14 @@ const isInsetDevicePreview = ref(false);
 const previewIframeStyles = ref({});
 const licenseStatus = ref();
 
-// Element refs
 const container = ref();
 const iframe = ref();
 const transitionIframe = ref();
 
-// Non-reactive data
 let throttledRenderPreview;
 let lastRenderedContent;
 const eventsController = new AbortController();
+// #endregion
 
 const { contentChanges } = useContent();
 
@@ -88,7 +87,7 @@ watch(contentChanges, (newValue) => {
 });
 
 watch(
-  // Will be `null` in single language setups
+  // Will be `null` in single-language setups.
   () => panel.language.code,
   () => {
     renderUnsavedContent();
@@ -103,9 +102,9 @@ const containerHeight = computed(
   () =>
     `calc(100dvh - ${
       isTopbarVisible.value
-        ? // Subtract the topbar's bottom margin
+        ? // Subtract the topbar's bottom margin.
           `calc(${topbarHeight.value}px + 5.75rem)`
-        : // Sticky columns have applied `top: calc(var(--header-sticky-offset) + 2vh)`
+        : // Sticky columns have applied `top: calc(var(--header-sticky-offset) + 2vh)`.
           "2vh"
     } - ${headerHeight.value}px - 2.75rem`,
 );
@@ -131,12 +130,12 @@ const containerHeight = computed(
     // eslint-disable-next-line no-undef
     __PLAYGROUND__ ? "active" : context.licenseStatus;
 
-  // Update interval can be `false`, so fall back to the default of `500`
+  // The update interval can be `false`, so fall back to the default of 500 ms.
   throttledRenderPreview = throttle(renderPreview, updateInterval.value || 500);
 
   renderUnsavedContent();
 
-  // Equals the `mounted` lifecycle hook
+  // Equals the `mounted` lifecycle hook.
   await nextTick();
 
   const topbar = document.querySelector(".k-topbar");
@@ -182,7 +181,7 @@ const containerHeight = computed(
 })();
 
 // Keep these synchronous – an unmount before the async setup resolves would
-// run `off` first, which mitt silently ignores
+// run `off` first, which mitt silently ignores.
 panel.events.on("page.changeTitle", renderUnsavedContent);
 panel.events.on("file.sort", renderUnsavedContent);
 
@@ -212,7 +211,7 @@ function setDevicePreview(device) {
 }
 
 async function updatePreviewStyles() {
-  // Wait for container to have the updated size
+  // Wait for the container to have the updated size.
   await nextTick();
 
   if (
@@ -239,7 +238,7 @@ async function updatePreviewStyles() {
     position: "absolute",
     top: 0,
     left: "50%",
-    // Offset by half the width for perfect centering
+    // Offset by half the width to center the device viewport.
     marginLeft: `${-deviceWidth / 2}px`,
   };
 }
@@ -269,7 +268,7 @@ async function renderPreview(content, { persistScrollPosition = true } = {}) {
     const blob = new Blob([html], { type: "text/html" });
     blobUrl.value = URL.createObjectURL(blob);
 
-    // Wait for the iframe to render
+    // Wait for the iframe to render.
     await nextTick();
     await new Promise((resolve) => {
       iframe.value.addEventListener(
@@ -289,7 +288,6 @@ async function renderPreview(content, { persistScrollPosition = true } = {}) {
     transitionBlobUrl.value = blobUrl.value;
     lastRenderedContent = JSON.stringify(content);
 
-    // Revoke the previous blob URL to free up memory
     if (lastBlobUrl) {
       URL.revokeObjectURL(lastBlobUrl);
     }
@@ -325,7 +323,7 @@ async function handleMessage({ data }) {
     let path = getNonLocalizedPath(url).slice(1);
 
     if (path) {
-      // Replace Kirby path parameters, like `notes/tag:sky`
+      // Strip Kirby path parameters, like the `tag:sky` in `notes/tag:sky`.
       // eslint-disable-next-line regexp/no-super-linear-backtracking
       path = path.replace(/\/[^/]+?:.+$/, "");
       path = joinURL("pages", path.replaceAll("/", "+"));
@@ -333,7 +331,7 @@ async function handleMessage({ data }) {
       path = "site";
     }
 
-    // Custom implementation of `panel.open` to avoid error notifications
+    // Custom implementation of `panel.open` to avoid error notifications.
     try {
       panel.isLoading = true;
       const state = await panel.get(withLeadingSlash(path));
@@ -410,7 +408,7 @@ function uppercaseFirst(string) {
           'k-shadow-md',
         (!transitionBlobUrl || hasError) &&
           'klp-border klp-border-dashed klp-border-[var(--preview-color-border)]',
-        // Allow for overflow shadow for inset device preview
+        // Allow for the overflow shadow of an inset device preview.
         devicePreview && 'klp-relative klp-overflow-visible',
       ]"
       :style="{
@@ -498,8 +496,8 @@ function uppercaseFirst(string) {
 </template>
 
 <style scoped>
-/* Required since Tailwind doesn't support shadow
-   as arbitrary value (interpreted as color) */
+/* Required since Tailwind doesn't support a shadow
+   as an arbitrary value, which it interprets as a color. */
 .k-shadow-md {
   box-shadow: var(--shadow-md);
 }

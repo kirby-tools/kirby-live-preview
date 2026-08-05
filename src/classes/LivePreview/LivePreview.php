@@ -12,7 +12,6 @@ use Kirby\Cms\Site;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Form;
-// use Kirby\Plugin\Plugin;
 use Kirby\Toolkit\Dom;
 use Kirby\Toolkit\LazyValue;
 
@@ -20,8 +19,7 @@ final class LivePreview
 {
     private readonly App $kirby;
     private readonly Page $page;
-    // TODO: Use Kirby 5 plugin class
-    // private readonly Plugin $plugin;
+    // TODO: Type as `Kirby\Plugin\Plugin` once Kirby 4 support is dropped.
     private readonly mixed $plugin;
     private readonly array $content;
 
@@ -66,7 +64,7 @@ final class LivePreview
             'language' => $this->kirby->languageCode()
         ]);
 
-        // TODO: Migrate to `toStoredValues` method in Kirby 5
+        // TODO: Migrate to the `toStoredValues` method once Kirby 4 support is dropped.
         $this->updateModelContent($model, $form->strings());
         $this->updateModelContent($model, ['previewMode' => 'true']);
 
@@ -105,10 +103,10 @@ final class LivePreview
             ]);
         }
 
-        // Stands in for Kirby's `$page->controller()` call, which cannot inject unsaved site content
+        // Stands in for Kirby's `$page->controller()` call, which cannot inject unsaved site content.
         $this->kirby->data = $this->resolveTemplateData($page, 'html');
 
-        // Mirror Kirby's native rendering pipeline, so hooks fire for the preview as well
+        // Mirrors Kirby's native rendering pipeline, so hooks fire for the preview as well.
         $this->kirby->data = $this->kirby->apply('page.render:before', [
             'contentType' => 'html',
             'data'        => $this->kirby->data,
@@ -186,13 +184,13 @@ final class LivePreview
 
         $dom->document()->documentElement->setAttribute('data-preview-mode', 'true');
 
-        // Forwards link clicks and save shortcuts to the Panel in the parent window
+        // Forwards link clicks and save shortcuts to the Panel in the parent window.
         $script = $dom->document()->createElement('script');
         $script->setAttribute('type', 'module');
         $script->setAttribute('src', $this->plugin->asset('iframe.js')->url());
         $dom->body()->appendChild($script);
 
-        // Relative URLs have to resolve against the site, not the blob URL the Panel renders the preview from
+        // Relative URLs have to resolve against the site, not the blob URL the Panel renders the preview from.
         if ($head->getElementsByTagName('base')->length === 0) {
             $base = $dom->document()->createElement('base');
             $base->setAttribute('href', $this->kirby->site()->url($this->kirby->languageCode()));
@@ -214,7 +212,7 @@ final class LivePreview
     private function updateModelContent(ModelWithContent $model, array $data): void
     {
         if (method_exists($model, 'version')) {
-            // Prevent changes from being written to disk during preview
+            // Prevents changes from being written to disk during the preview.
             if (!($model->storage() instanceof \Kirby\Content\MemoryStorage)) {
                 $model = $model->changeStorage(\Kirby\Content\MemoryStorage::class, copy: true);
             }
