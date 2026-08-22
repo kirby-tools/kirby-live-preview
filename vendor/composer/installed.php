@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'johannschopplich/kirby-live-preview',
-        'pretty_version' => '2.6.2',
-        'version' => '2.6.2.0',
+        'pretty_version' => '2.6.3',
+        'version' => '2.6.3.0',
         'reference' => null,
         'type' => 'kirby-plugin',
         'install_path' => __DIR__ . '/../../',
@@ -20,8 +20,8 @@
             'dev_requirement' => false,
         ),
         'johannschopplich/kirby-live-preview' => array(
-            'pretty_version' => '2.6.2',
-            'version' => '2.6.2.0',
+            'pretty_version' => '2.6.3',
+            'version' => '2.6.3.0',
             'reference' => null,
             'type' => 'kirby-plugin',
             'install_path' => __DIR__ . '/../../',
@@ -29,9 +29,9 @@
             'dev_requirement' => false,
         ),
         'johannschopplich/kirby-tools-licensing' => array(
-            'pretty_version' => '0.9.0',
-            'version' => '0.9.0.0',
-            'reference' => 'c0e2e3adaa7d31d6d7bc13be9bfb22ef133fdc95',
+            'pretty_version' => '0.9.4',
+            'version' => '0.9.4.0',
+            'reference' => 'f54a1fe34b72b5c1843eac41e5c7ba93a640f03b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../johannschopplich/kirby-tools-licensing',
             'aliases' => array(),

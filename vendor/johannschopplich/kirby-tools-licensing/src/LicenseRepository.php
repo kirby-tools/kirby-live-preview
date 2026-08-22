@@ -9,78 +9,74 @@ use Kirby\Data\Json;
 use Throwable;
 
 /**
- * Handles reading and writing license data for Kirby Tools plugins.
+ * Stores the licenses of all Kirby Tools plugins in a single JSON file next to
+ * Kirby's own license file, keyed by package name.
  *
  * @link      https://kirby.tools
  * @copyright Johann Schopplich
  * @license   AGPL-3.0
  */
-class LicenseRepository
+final class LicenseRepository
 {
     public const LICENSE_FILE = '.kirby-tools-licenses';
 
-    protected string $licenseFile;
-    protected array|null $cache = null;
+    private readonly string $licenseFile;
+    private array|null $cache = null;
+    private string|null $readError = null;
 
     public function __construct()
     {
-        $this->licenseFile = dirname(App::instance()->root('license')) . '/' . static::LICENSE_FILE;
+        $this->licenseFile = dirname(App::instance()->root('license')) . '/' . self::LICENSE_FILE;
     }
 
-    /**
-     * Reads all licenses from the license file.
-     */
     public function readAll(): array
     {
         if ($this->cache !== null) {
             return $this->cache;
         }
 
+        if (file_exists($this->licenseFile) === false) {
+            return $this->cache = [];
+        }
+
         try {
             $this->cache = Json::read($this->licenseFile);
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            $this->readError = $e->getMessage();
             $this->cache = [];
         }
 
         return $this->cache;
     }
 
-    /**
-     * Gets a specific license by package name.
-     */
+    public function getReadError(): string|null
+    {
+        $this->readAll();
+
+        return $this->readError;
+    }
+
     public function get(string $packageName): array|null
     {
         $licenses = $this->readAll();
         return $licenses[$packageName] ?? null;
     }
 
-    /**
-     * Gets the license key for a package.
-     */
     public function getLicenseKey(string $packageName): string|null
     {
         return $this->get($packageName)['licenseKey'] ?? null;
     }
 
-    /**
-     * Gets the license compatibility constraint for a package.
-     */
     public function getLicenseCompatibility(string $packageName): string|null
     {
         return $this->get($packageName)['licenseCompatibility'] ?? null;
     }
 
-    /**
-     * Gets the stored plugin version for a package.
-     */
     public function getPluginVersion(string $packageName): string|null
     {
         return $this->get($packageName)['pluginVersion'] ?? null;
     }
 
-    /**
-     * Saves license data for a package.
-     */
     public function save(string $packageName, array $data, string|null $pluginVersion): void
     {
         $licenses = $this->readAll();
@@ -94,7 +90,7 @@ class LicenseRepository
 
         Json::write($this->licenseFile, $licenses);
 
-        // Invalidate cache after write
         $this->cache = $licenses;
+        $this->readError = null;
     }
 }
