@@ -2,14 +2,14 @@
 
 # Kirby Live Preview
 
-The Live Preview plugin renders your content in real-time as you type. Display your page with unsaved changes and simulate different screen sizes to see how your content will look on mobile, tablet, and desktop.
+Kirby Live Preview is a plugin for [Kirby CMS](https://getkirby.com) that adds a Panel section to render any page in an iframe – content updates as editors type, unsaved changes included. Navigate by clicking links inside the preview – the matching Panel view opens instead of the linked page. Pin the section sticky to keep it visible while editing blocks and other fields side-by-side.
 
 ## Features
 
-- 🖥️ **Real-Time Preview**: See how your page looks before saving your changes and without leaving the Panel.
-- 📱 **Device Screen Sizes**: Simulate different screen sizes to see how your content will look on mobile, tablet, and desktop.
-- 🔍 **Detect Preview Mode**: Conditionally hide elements, such as a cookie banner, or turn off animations in the rendered preview page.
-- 🔗 **Panel Redirects**: Clicking inside the preview opens the corresponding Panel page instead of following the link.
+- 🖥️ **Renders as You Type**: The section refreshes on every change, before anything is saved.
+- 📱 **Three Screen Widths**: Toggle the preview to 390, 768 or 1440 pixels wide; where the section is narrower, the page is scaled down.
+- 🔍 **Preview Mode**: The rendered page carries a preview-mode attribute on its `html` element and a `previewMode()` method in PHP, so it can hide the cookie banner or skip animations.
+- 🔗 **Links Open Panel Pages**: A click on a link inside the preview opens the linked page in the Panel; links to other sites open in a new tab.
 
 ## Licensing
 
