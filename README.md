@@ -13,11 +13,27 @@ Kirby Live Preview is a plugin for [Kirby CMS](https://getkirby.com) that adds a
 
 ## Licensing
 
-Kirby Live Preview is a commercial plugin that requires a license. You can install and test the plugin locally without a license. However, production environments require a valid license. You can purchase a license from the [Kirby Tools Website](https://kirby.tools/live-preview).
+Kirby Live Preview is a commercial plugin that requires a license. You can install and test the plugin locally without a license. However, production environments require a valid license. You can purchase a license from the [Kirby Live Preview Website](https://kirby.tools/live-preview/buy).
 
-## Getting Started
+## Requirements
 
-To get started, please refer to the [documentation](https://kirby.tools/docs/live-preview) for guidance on installation, configuration, and usage.
+- Kirby 4 or Kirby 5
+
+## Installation
+
+### Composer (Recommended)
+
+```bash
+composer require johannschopplich/kirby-live-preview
+```
+
+### Manual Installation
+
+Download and copy this repository to `/site/plugins/kirby-live-preview`.
+
+## Documentation
+
+For installation, configuration, and usage, see the [Kirby Live Preview documentation](https://kirby.tools/docs/live-preview).
 
 ## Support and Questions
 
@@ -43,4 +59,4 @@ We value your feedback and ideas for improving Kirby Live Preview. If you have a
 
 ## License
 
-[Kirby Tools License](./LICENSE.md) License © 2024-PRESENT [Johann Schopplich](https://github.com/johannschopplich)
+[Kirby Tools License](./LICENSE.md) © 2024-PRESENT [Johann Schopplich](https://github.com/johannschopplich)
