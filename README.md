@@ -2,7 +2,7 @@
 
 # Kirby Live Preview
 
-Kirby Live Preview is a plugin for [Kirby CMS](https://getkirby.com) that adds a Panel section to render any page in an iframe – content updates as editors type, unsaved changes included. Navigate by clicking links inside the preview – the matching Panel view opens instead of the linked page. Pin the section sticky to keep it visible while editing blocks and other fields side-by-side.
+Kirby Live Preview is a plugin for [Kirby CMS](https://getkirby.com) that adds a Panel section to render any page in an iframe – content updates as editors type. Navigate by clicking links inside the preview – the matching Panel view opens instead of the linked page. Pin the section sticky to keep it visible while editing blocks and other fields side-by-side.
 
 ## Features
 
