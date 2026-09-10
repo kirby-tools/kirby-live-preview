@@ -7,7 +7,7 @@ Kirby Live Preview is a plugin for [Kirby CMS](https://getkirby.com) that adds a
 ## Features
 
 - 🖥️ **Renders as You Type**: The section refreshes on every change, before anything is saved.
-- 📱 **Three Screen Widths**: Toggle the preview to 390, 768 or 1440 pixels wide; where the section is narrower, the page is scaled down.
+- 📱 **Three Screen Widths**: Toggle the preview to 390, 768, or 1440 pixels wide; where the section is narrower, the page is scaled down.
 - 🔍 **Preview Mode**: The rendered page carries a preview-mode attribute on its `html` element and a `previewMode()` method in PHP, so it can hide the cookie banner or skip animations.
 - 🔗 **Links Open Panel Pages**: A click on a link inside the preview opens the linked page in the Panel; links to other sites open in a new tab.
 
