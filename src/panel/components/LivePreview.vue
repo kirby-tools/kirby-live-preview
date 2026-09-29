@@ -405,7 +405,7 @@ function uppercaseFirst(string) {
         transitionBlobUrl &&
           !hasError &&
           !isInsetDevicePreview &&
-          'k-shadow-md',
+          'klp-[box-shadow:var(--shadow-md)]',
         (!transitionBlobUrl || hasError) &&
           'klp-border klp-border-dashed klp-border-[var(--preview-color-border)]',
         // Allow for the overflow shadow of an inset device preview.
@@ -431,7 +431,7 @@ function uppercaseFirst(string) {
           showTransitionIframe &&
             !hasError &&
             isInsetDevicePreview &&
-            'k-shadow-md',
+            'klp-[box-shadow:var(--shadow-md)]',
         ]"
         :style="{
           gridArea: '1 / 1 / 2 / 2',
@@ -455,7 +455,7 @@ function uppercaseFirst(string) {
           !showTransitionIframe &&
             !hasError &&
             isInsetDevicePreview &&
-            'k-shadow-md',
+            'klp-[box-shadow:var(--shadow-md)]',
         ]"
         :style="{
           gridArea: '1 / 1 / 2 / 2',
@@ -494,11 +494,3 @@ function uppercaseFirst(string) {
     </footer>
   </k-section>
 </template>
-
-<style scoped>
-/* Required since Tailwind doesn't support a shadow
-   as an arbitrary value, which it interprets as a color. */
-.k-shadow-md {
-  box-shadow: var(--shadow-md);
-}
-</style>
