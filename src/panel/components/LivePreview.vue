@@ -300,7 +300,15 @@ async function renderPreview(content, { persistScrollPosition = true } = {}) {
   }
 }
 
-async function handleMessage({ data }) {
+async function handleMessage({ data, source }) {
+  // Only the preview frames may save or navigate the Panel
+  if (
+    source !== iframe.value?.contentWindow &&
+    source !== transitionIframe.value?.contentWindow
+  ) {
+    return;
+  }
+
   if (data.type === "save") {
     panel.events.emit(`${panel.context}.save`);
     return;
@@ -309,8 +317,13 @@ async function handleMessage({ data }) {
   if (data.type === "link") {
     const url = new URL(data.href);
 
+    // Like Kirby's `k-link` since 5.6.0, never open a script URL
+    if (url.protocol !== "http:" && url.protocol !== "https:") {
+      return;
+    }
+
     if (url.origin !== window.location.origin) {
-      window.open(data.href, "_blank");
+      window.open(data.href, "_blank", "noopener");
       return;
     }
 
