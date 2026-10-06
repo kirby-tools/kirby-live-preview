@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.3.0",
-    "@kirby-tools/licensing": "^0.8.0",
+    "@kirby-tools/licensing": "^0.9.0",
     "@unocss/eslint-plugin": "^66.8.1",
     "bumpp": "^12.2.1",
     "esbuild": "^0.28.2",
