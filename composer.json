@@ -1,12 +1,14 @@
 {
   "name": "johannschopplich/kirby-live-preview",
-  "description": "Real-time page preview in the Kirby Panel",
+  "description": "See unsaved changes live, on any screen size",
   "type": "kirby-plugin",
   "version": "2.6.3",
   "keywords": [
-    "content",
     "kirby",
-    "preview"
+    "kirby-cms",
+    "kirby-plugin",
+    "preview",
+    "live-preview"
   ],
   "license": "proprietary",
   "homepage": "https://kirby.tools/live-preview",
