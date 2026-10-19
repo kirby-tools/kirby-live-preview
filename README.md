@@ -1,4 +1,4 @@
-[![Kirby Live Preview](./.github/social-card.png)](https://kirby.tools/live-preview)
+[![Kirby Live Preview](https://kirby.tools/social-card/live-preview.png)](https://kirby.tools/live-preview)
 
 # Kirby Live Preview
 
