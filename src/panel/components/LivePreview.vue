@@ -1,4 +1,6 @@
-<script>
+<script lang="ts">
+import type { LicenseStatus } from "@kirby-tools/licensing";
+import type { DevicePreset, SectionResponse } from "../types";
 import { LicensingButtonGroup } from "@kirby-tools/licensing/components";
 import {
   computed,
@@ -27,7 +29,7 @@ export default {
 };
 </script>
 
-<script setup>
+<script setup lang="ts">
 const props = defineProps(propsDefinition);
 
 const _isKirby5 = isKirby5();
@@ -36,40 +38,45 @@ const api = useApi();
 const { t } = useI18n();
 const { getNonLocalizedPath } = useLocale();
 
-const DEVICE_VIEWPORT_PRESETS = {
+interface RenderOptions {
+  persistScrollPosition?: boolean;
+}
+
+const DEVICE_VIEWPORT_PRESETS: Record<DevicePreset, number> = {
   mobile: 390,
   tablet: 768,
   desktop: 1440,
 };
+const DEVICE_PRESETS = Object.keys(DEVICE_VIEWPORT_PRESETS) as DevicePreset[];
 
 // #region Section props
-const label = ref();
-const pageId = ref();
-const updateInterval = ref();
-const interactable = ref();
-const aspectRatio = ref();
-const updateStrategy = ref();
+const label = ref<string>();
+const pageId = ref<string>();
+const updateInterval = ref<SectionResponse["updateInterval"]>();
+const interactable = ref<boolean>();
+const aspectRatio = ref<string>();
+const updateStrategy = ref<SectionResponse["updateStrategy"]>();
 
-const help = ref();
+const help = ref<string | null>();
 // #endregion
 
 // #region Runtime state
 const isRendering = ref(false);
 const showTransitionIframe = ref(false);
 const hasError = ref(false);
-const blobUrl = ref();
-const transitionBlobUrl = ref();
-const devicePreview = ref();
+const blobUrl = ref<string>();
+const transitionBlobUrl = ref<string>();
+const devicePreview = ref<DevicePreset>();
 const isInsetDevicePreview = ref(false);
-const previewIframeStyles = ref({});
-const licenseStatus = ref();
+const previewIframeStyles = ref<Record<string, string | number>>({});
+const licenseStatus = ref<LicenseStatus>();
 
-const container = ref();
-const iframe = ref();
-const transitionIframe = ref();
+const container = ref<HTMLElement>();
+const iframe = ref<HTMLIFrameElement>();
+const transitionIframe = ref<HTMLIFrameElement>();
 
-let throttledRenderPreview;
-let lastRenderedContent;
+let throttledRenderPreview: typeof renderPreview | undefined;
+let lastRenderedContent: string | undefined;
 const eventsController = new AbortController();
 // #endregion
 
@@ -116,7 +123,7 @@ const containerHeight = computed(
     load({
       parent: props.parent,
       name: props.name,
-    }),
+    }) as Promise<SectionResponse>,
   ]);
 
   label.value = t(response.label) || panel.t("johannschopplich.preview.label");
@@ -126,9 +133,7 @@ const containerHeight = computed(
   aspectRatio.value = response.aspectRatio || undefined;
   updateStrategy.value = response.updateStrategy;
   help.value = response.help;
-  licenseStatus.value =
-    // eslint-disable-next-line no-undef
-    __PLAYGROUND__ ? "active" : context.licenseStatus;
+  licenseStatus.value = __PLAYGROUND__ ? "active" : context.licenseStatus;
 
   // The update interval can be `false`, so fall back to the default of 500 ms.
   throttledRenderPreview = throttle(renderPreview, updateInterval.value || 500);
@@ -138,8 +143,8 @@ const containerHeight = computed(
   // Equals the `mounted` lifecycle hook.
   await nextTick();
 
-  const topbar = document.querySelector(".k-topbar");
-  const header = document.querySelector(".k-header");
+  const topbar = document.querySelector<HTMLElement>(".k-topbar");
+  const header = document.querySelector<HTMLElement>(".k-header");
 
   if (!aspectRatio.value && topbar && header) {
     topbarHeight.value = topbar.offsetHeight;
@@ -147,9 +152,10 @@ const containerHeight = computed(
 
     const observer = new IntersectionObserver(
       ([entry]) => {
+        if (!entry) return;
         isTopbarVisible.value = entry.isIntersecting;
         if (entry.isIntersecting) {
-          topbarHeight.value = entry.target.offsetHeight;
+          topbarHeight.value = (entry.target as HTMLElement).offsetHeight;
         }
         updatePreviewStyles();
       },
@@ -196,16 +202,17 @@ onBeforeUnmount(() => {
   }
 });
 
-function renderUnsavedContent(options) {
+function renderUnsavedContent(options?: RenderOptions) {
   throttledRenderPreview?.(contentChanges.value, options);
 }
 
 function openPreviewInTab() {
+  if (!blobUrl.value) return;
   const url = new URL(blobUrl.value);
   window.open(url, "_blank");
 }
 
-function setDevicePreview(device) {
+function setDevicePreview(device: DevicePreset) {
   devicePreview.value = device === devicePreview.value ? undefined : device;
   updatePreviewStyles();
 }
@@ -214,11 +221,7 @@ async function updatePreviewStyles() {
   // Wait for the container to have the updated size.
   await nextTick();
 
-  if (
-    !container.value ||
-    !devicePreview.value ||
-    !(devicePreview.value in DEVICE_VIEWPORT_PRESETS)
-  ) {
+  if (!container.value || !devicePreview.value) {
     isInsetDevicePreview.value = false;
     return;
   }
@@ -243,26 +246,32 @@ async function updatePreviewStyles() {
   };
 }
 
-async function renderPreview(content, { persistScrollPosition = true } = {}) {
+async function renderPreview(
+  content: Record<string, unknown>,
+  { persistScrollPosition = true }: RenderOptions = {},
+) {
   if (isRendering.value) return;
   isRendering.value = true;
 
   let scrollPosition = 0;
 
   if (iframe.value) {
-    scrollPosition = iframe.value.contentWindow.scrollY;
+    scrollPosition = iframe.value.contentWindow?.scrollY ?? 0;
     transitionIframe.value?.contentWindow?.scrollTo(0, scrollPosition);
   }
 
   showTransitionIframe.value = true;
 
   try {
-    const { data: html } = await api.post("__live-preview__/render", {
-      pageId: pageId.value,
-      content,
-      interactable: interactable.value,
-      model: panel.view.path === "site" ? "site" : "page",
-    });
+    const { data: html } = await api.post<{ data: string }>(
+      "__live-preview__/render",
+      {
+        pageId: pageId.value,
+        content,
+        interactable: interactable.value,
+        model: panel.view.path === "site" ? "site" : "page",
+      },
+    );
 
     const lastBlobUrl = blobUrl.value;
     const blob = new Blob([html], { type: "text/html" });
@@ -270,12 +279,12 @@ async function renderPreview(content, { persistScrollPosition = true } = {}) {
 
     // Wait for the iframe to render.
     await nextTick();
-    await new Promise((resolve) => {
-      iframe.value.addEventListener(
+    await new Promise<void>((resolve) => {
+      iframe.value!.addEventListener(
         "load",
         () => {
           if (scrollPosition && persistScrollPosition) {
-            iframe.value.contentWindow.scrollTo(0, scrollPosition);
+            iframe.value!.contentWindow?.scrollTo(0, scrollPosition);
           }
           resolve();
         },
@@ -300,7 +309,7 @@ async function renderPreview(content, { persistScrollPosition = true } = {}) {
   }
 }
 
-async function handleMessage({ data, source }) {
+async function handleMessage({ data, source }: MessageEvent) {
   // Only the preview frames may save or navigate the Panel
   if (
     source !== iframe.value?.contentWindow &&
@@ -356,7 +365,7 @@ async function handleMessage({ data, source }) {
   }
 }
 
-function uppercaseFirst(string) {
+function uppercaseFirst(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 </script>
@@ -374,7 +383,7 @@ function uppercaseFirst(string) {
 
       <k-button-group layout="collapsed">
         <k-button
-          v-for="device in Object.keys(DEVICE_VIEWPORT_PRESETS)"
+          v-for="device in DEVICE_PRESETS"
           :key="device"
           variant="filled"
           :theme="devicePreview === device ? 'blue' : undefined"

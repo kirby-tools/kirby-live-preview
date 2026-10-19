@@ -1,6 +1,7 @@
 // Passes link clicks to the parent window.
 document.addEventListener("click", (event) => {
-  const link = event.target.closest("a");
+  const link =
+    event.target instanceof Element ? event.target.closest("a") : null;
 
   if (link?.href) {
     const url = tryParseUrl(link.href);
@@ -42,7 +43,7 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-function tryParseUrl(url) {
+function tryParseUrl(url: string) {
   try {
     return new URL(url);
   } catch {

@@ -1,3 +1,5 @@
+/* eslint-disable ts/ban-ts-comment */
+// @ts-ignore - Vue component
 import LivePreview from "./components/LivePreview.vue";
 import "virtual:uno.css";
 

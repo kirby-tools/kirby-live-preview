@@ -5,11 +5,11 @@ export function useLocale() {
   const panel = usePanel();
   const locales = panel.languages.map((language) => language.code);
 
-  const getNonLocalizedPath = (url) => {
+  const getNonLocalizedPath = (url: string | URL) => {
     const _url = url instanceof URL ? url : new URL(url);
     const parts = _url.pathname.split("/").filter(Boolean);
 
-    if (locales.includes(parts[0])) {
+    if (parts[0] && locales.includes(parts[0])) {
       parts.shift();
     }
 
