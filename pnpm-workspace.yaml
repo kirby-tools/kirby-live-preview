@@ -1,15 +1,15 @@
+minimumReleaseAgeExcludePrune: true
 minimumReleaseAgeExclude:
-  - eslint@10.9.0
   - kirby-types@1.8.1
   - '@kirby-tools/licensing@0.9.0'
 
-shellEmulator: true
 trustPolicy: no-downgrade
 trustPolicyExclude:
   - chokidar@4.0.3
   - semver@6.3.1
   - vite@6.3.7
 
+shellEmulator: true
 allowBuilds:
   "@parcel/watcher": true
   esbuild: true
