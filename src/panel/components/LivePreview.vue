@@ -272,7 +272,7 @@ async function renderPreview(
         pageId: pageId.value,
         content,
         interactable: interactable.value,
-        model: panel.view.path === "site" ? "site" : "page",
+        parent: props.parent,
       },
     );
 

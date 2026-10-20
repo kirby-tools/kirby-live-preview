@@ -26,7 +26,7 @@ return [
                 $request = $kirby->request()->body();
                 $preview = new LivePreview(
                     id: $request->get('pageId'),
-                    model: $request->get('model')
+                    parent: $request->get('parent')
                 );
 
                 $html = $preview->render(

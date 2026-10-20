@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace JohannSchopplich\LivePreview;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Find;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
@@ -19,13 +20,17 @@ final class LivePreview
 {
     private readonly App $kirby;
     private readonly Page $page;
+    private readonly ModelWithContent $model;
     // TODO: Type as `Kirby\Plugin\Plugin` once Kirby 4 support is dropped.
     private readonly mixed $plugin;
     private readonly array $content;
 
+    /**
+     * @param string $parent Panel path of the model the posted content belongs to, like `site` or `pages/notes+across-the-ocean`
+     */
     public function __construct(
-        private readonly string|null $id,
-        private readonly string $model
+        string|null $id,
+        string $parent
     ) {
         $kirby = App::instance();
         $page = $id ? $kirby->page($id) : $kirby->site()->homePage();
@@ -41,6 +46,7 @@ final class LivePreview
 
         $this->kirby = $kirby;
         $this->page = $page;
+        $this->model = Find::parent($parent);
         $this->plugin = $plugin;
     }
 
@@ -48,7 +54,9 @@ final class LivePreview
     {
         $this->content = $content;
 
-        $previewPage = $this->createPreviewModel($this->page, $this->model === 'site' ? [] : $content);
+        // The posted content belongs to the edited model, so any other page renders as saved.
+        $isEditedPage = $this->model instanceof Page && $this->model->is($this->page);
+        $previewPage = $this->createPreviewModel($this->page, $isEditedPage ? $content : []);
         $html = $this->renderTemplate($previewPage);
 
         return $this->processHtml($html, $interactable);
@@ -131,7 +139,7 @@ final class LivePreview
      */
     private function resolveTemplateData(Page $page, string $contentType = 'html'): array
     {
-        $site = $this->model === 'site'
+        $site = $this->model instanceof Site
             ? $this->createPreviewModel($this->kirby->site(), $this->content)
             : $this->kirby->site();
 
