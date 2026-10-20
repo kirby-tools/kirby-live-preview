@@ -10,6 +10,7 @@ import {
   ref,
   useApi,
   useContent,
+  useHelpers,
   useI18n,
   usePanel,
   useSection,
@@ -38,6 +39,7 @@ const props = defineProps(propsDefinition);
 const _isKirby5 = isKirby5();
 const panel = usePanel();
 const api = useApi();
+const helpers = useHelpers();
 const { t } = useI18n();
 const { getNonLocalizedPath } = useLocale();
 
@@ -329,8 +331,7 @@ async function handleMessage({ data, source }: MessageEvent) {
   if (data.type === "link") {
     const url = new URL(data.href);
 
-    // Like Kirby's `k-link` since 5.6.0, never open a script URL
-    if (url.protocol !== "http:" && url.protocol !== "https:") {
+    if (helpers.url.hasDangerousScheme(data.href)) {
       return;
     }
 
