@@ -1,6 +1,4 @@
 minimumReleaseAgeExcludePrune: true
-minimumReleaseAgeExclude:
-  - "@kirby-tools/licensing@0.9.0"
 
 trustPolicy: no-downgrade
 trustPolicyExclude:
