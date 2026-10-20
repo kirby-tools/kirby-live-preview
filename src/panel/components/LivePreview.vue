@@ -24,6 +24,9 @@ const propsDefinition = {
   ...section,
 };
 
+// eslint-disable-next-line regexp/no-super-linear-backtracking
+const PATH_PARAMS_REGEX = /\/[^/]+?:.+$/;
+
 export default {
   inheritAttrs: false,
 };
@@ -346,8 +349,7 @@ async function handleMessage({ data, source }: MessageEvent) {
 
     if (path) {
       // Strip Kirby path parameters, like the `tag:sky` in `notes/tag:sky`.
-      // eslint-disable-next-line regexp/no-super-linear-backtracking
-      path = path.replace(/\/[^/]+?:.+$/, "");
+      path = path.replace(PATH_PARAMS_REGEX, "");
       path = joinURL("pages", path.replaceAll("/", "+"));
     } else {
       path = "site";

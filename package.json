@@ -9,10 +9,10 @@
     "build": "kirbyup src/panel/index.ts",
     "build:assets": "rm -rf assets && esbuild src/assets/iframe/index.ts --bundle --minify --format=esm --target=es2020 --outfile=assets/iframe.js",
     "build:playground": "PLAYGROUND=true pnpm run build && pnpm run build:assets",
-    "test:types": "tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier \"src/panel/**\" --write",
+    "test:types": "tsc --noEmit",
     "release": "pnpm run build && pnpm run build:assets && bumpp --all --execute \"npx zx scripts/pre-release.mjs\" && zx scripts/post-release.mjs"
   },
   "devDependencies": {
