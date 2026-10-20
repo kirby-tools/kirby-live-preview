@@ -4,13 +4,27 @@ document.addEventListener("click", (event) => {
     event.target instanceof Element ? event.target.closest("a") : null;
 
   if (link?.href) {
+    const href = link.getAttribute("href");
+
+    // The injected `<base>` would resolve `#team` to the site's home page, so the hash is set on the preview's own document.
+    // A site script that handles the link itself, like a tab or an accordion, keeps it.
+    if (href?.startsWith("#")) {
+      if (event.defaultPrevented) {
+        return;
+      }
+
+      event.preventDefault();
+      window.location.hash = href;
+      return;
+    }
+
     const url = tryParseUrl(link.href);
 
     if (!url) {
       return;
     }
 
-    // Links with a fragment are left to the browser so the target scrolls inside the preview instead of navigating the Panel.
+    // A link with a path and a fragment loads that page, as saved, inside the preview instead of navigating the Panel.
     if (url.hash) {
       return;
     }
