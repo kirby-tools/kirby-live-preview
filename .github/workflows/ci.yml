@@ -7,6 +7,18 @@ on:
   pull_request:
 
 jobs:
+  php:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          coverage: none
+
+      - run: composer install --no-interaction --no-progress
+      - run: vendor/bin/phpunit
+
   panel:
     runs-on: ubuntu-latest
     steps:
@@ -20,4 +32,5 @@ jobs:
       - run: pnpm install
       - run: pnpm run test:types
       - run: pnpm run lint
-      - run: pnpm exec prettier --check "src/panel/**"
+      - run: pnpm exec prettier --check "src/panel/**" "tests/panel/**"
+      - run: pnpm exec vitest run
