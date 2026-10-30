@@ -25,6 +25,6 @@ columns:
         help: All projects for the homepage are being pulled from the photography page.
 
   - width: 1/2
-    sections:
+    fields:
       preview:
         type: preview

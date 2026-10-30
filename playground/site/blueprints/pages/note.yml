@@ -21,7 +21,7 @@ options:
 columns:
   - width: 1/2
     sticky: true
-    sections:
+    fields:
       preview:
         label: Sticky Live Preview
         type: preview

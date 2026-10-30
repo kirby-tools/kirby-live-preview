@@ -15,7 +15,7 @@ tabs:
   preview:
     icon: brush
     label: Preview
-    sections:
+    fields:
       preview:
         type: preview
 
