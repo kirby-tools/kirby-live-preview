@@ -135,6 +135,7 @@ function uppercaseFirst(value: string) {
           variant="filled"
           size="xs"
           icon="live-preview-restart"
+          :title="labels.restart"
           @click="emit('restart')"
         />
       </div>

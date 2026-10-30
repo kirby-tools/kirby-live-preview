@@ -1,4 +1,5 @@
 {
   "johannschopplich.preview.label": "Aperçu en direct",
-  "johannschopplich.preview.error.render": "Aperçu échoué"
+  "johannschopplich.preview.error.render": "Aperçu échoué",
+  "johannschopplich.preview.restart": "Actualiser l'aperçu"
 }

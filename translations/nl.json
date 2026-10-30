@@ -1,4 +1,5 @@
 {
   "johannschopplich.preview.label": "Live voorbeeld",
-  "johannschopplich.preview.error.render": "Voorbeeld mislukt"
+  "johannschopplich.preview.error.render": "Voorbeeld mislukt",
+  "johannschopplich.preview.restart": "Voorbeeld vernieuwen"
 }

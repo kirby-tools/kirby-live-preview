@@ -1,4 +1,5 @@
 {
   "johannschopplich.preview.label": "Live Preview",
-  "johannschopplich.preview.error.render": "Preview failed"
+  "johannschopplich.preview.error.render": "Preview failed",
+  "johannschopplich.preview.restart": "Refresh preview"
 }

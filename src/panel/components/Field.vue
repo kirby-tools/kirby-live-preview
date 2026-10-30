@@ -63,6 +63,7 @@ const hasLicenseButtons = !__PLAYGROUND__;
 const labels: PreviewFieldLabels = {
   open: panel.t("open"),
   renderError: panel.t("johannschopplich.preview.error.render"),
+  restart: panel.t("johannschopplich.preview.restart"),
 };
 
 const body = useTemplateRef("body");
