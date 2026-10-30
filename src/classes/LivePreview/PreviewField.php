@@ -12,13 +12,8 @@ use Kirby\Toolkit\Str;
 
 final class PreviewField extends DisplayField
 {
-    private const UPDATE_STRATEGIES = ['interval', 'blur'];
-
     #[Prop(computed: true, export: false)]
     protected string|null $pageId = null;
-
-    #[Prop(computed: true)]
-    protected string $updateStrategy = 'interval';
 
     /**
      * `mixed`, so a string like `"500"` reaches the getter as a string and is
@@ -87,17 +82,6 @@ final class PreviewField extends DisplayField
     public function interactable(): bool
     {
         return $this->interactable;
-    }
-
-    public function updateStrategy(): string
-    {
-        if (!in_array($this->updateStrategy, self::UPDATE_STRATEGIES, true)) {
-            throw new InvalidArgumentException(
-                message: 'Invalid update strategy "' . $this->updateStrategy . '", expected one of: ' . implode(', ', self::UPDATE_STRATEGIES)
-            );
-        }
-
-        return $this->updateStrategy;
     }
 
     public function updateInterval(): int|false

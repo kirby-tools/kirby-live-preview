@@ -20,7 +20,6 @@ final class PreviewFieldTest extends TestCase
     public function toArray_exports_the_preview_options_and_the_license_props(): void
     {
         $props = $this->field([
-            'updateStrategy' => 'blur',
             'updateInterval' => 1000,
             'aspectRatio' => '16/9'
         ])->toArray();
@@ -29,8 +28,7 @@ final class PreviewFieldTest extends TestCase
             'aspectRatio' => '16/9',
             'licenseDialog' => 'johannschopplich-kirby-live-preview/activate',
             'licenseStatus' => 'inactive',
-            'updateInterval' => 1000,
-            'updateStrategy' => 'blur'
+            'updateInterval' => 1000
         ];
 
         $this->assertSame($expected, array_intersect_key($props, $expected));
@@ -56,14 +54,6 @@ final class PreviewFieldTest extends TestCase
             'label' => Str::label('preview')
         ])->label());
         $this->assertSame('Sticky Preview', $this->field(['label' => 'Sticky Preview'])->label());
-    }
-
-    #[Test]
-    public function updateStrategy_rejects_an_unknown_strategy(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        $this->field(['updateStrategy' => 'foo'])->updateStrategy();
     }
 
     #[Test]

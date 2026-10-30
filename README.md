@@ -33,7 +33,7 @@ Download and copy this repository to `/site/plugins/kirby-live-preview`.
 
 ## Upgrading from Live Preview 2
 
-Live Preview 3 requires Kirby 6, which has no plugin sections, so the Live Preview section is a field now. Kirby shows `Invalid section type ("preview")` until you move it from `sections:` to `fields:`. Its options stay the same:
+Live Preview 3 requires Kirby 6, which has no plugin sections, so the Live Preview section is a field now. Kirby shows `Invalid section type ("preview")` until you move it from `sections:` to `fields:`:
 
 ```yaml
 # Live Preview 2
@@ -47,7 +47,7 @@ fields:
     type: preview
 ```
 
-An `updateStrategy` other than `interval` or `blur` shows an error in place of the field instead of falling back to `interval`. `interactable: 0` makes the preview inert like `false`.
+The preview renders once you stop typing for `updateInterval` milliseconds, 500 by default, instead of every interval while you type. `updateStrategy` is gone: the pause covers what `blur` was for, and Kirby ignores the option. `interactable: 0` makes the preview inert like `false`.
 
 ## Documentation
 

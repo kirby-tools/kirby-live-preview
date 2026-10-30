@@ -29,6 +29,9 @@ importers:
       bumpp:
         specifier: ^12.3.0
         version: 12.3.0
+      es-toolkit:
+        specifier: ^1.53.0
+        version: 1.53.0
       esbuild:
         specifier: ^0.28.2
         version: 0.28.2
@@ -53,9 +56,6 @@ importers:
       prettier:
         specifier: ^3.9.10
         version: 3.9.10
-      throttleit:
-        specifier: ^3.0.0
-        version: 3.0.0
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
@@ -1636,6 +1636,9 @@ packages:
   es-module-lexer@2.3.2:
     resolution: {integrity: sha512-poHGpORABojJJucnV9KbOavETW8lBVnphkW77ER5/BQ5Fz7oXSoCNek7IH3vR5nRjdsEz926ibFYX8KtLQmdyw==}
 
+  es-toolkit@1.53.0:
+    resolution: {integrity: sha512-3+AYXp9fmJ/UhHBMYj2/U+RaUouMD90SzoItyDOB2Za7W6dB7fQApFGnZPl2MF6K8/Tv1koh1JyirSx/kju6Pw==}
+
   esbuild@0.28.2:
     resolution: {integrity: sha512-HKVLS8dvII+xoKW9kmqxbRKrnWEXfJJr/FZhhJmiqIB0e053QNYFqOBouTMO/k5sID4MvCiUCvv8b9M4h32wIA==}
     engines: {node: '>=18'}
@@ -2721,10 +2724,6 @@ packages:
   tapable@2.3.3:
     resolution: {integrity: sha512-uxc/zpqFg6x7C8vOE7lh6Lbda8eEL9zmVm/PLeTPBRhh1xCgdWaQ+J1CUieGpIfm2HdtsUpRv+HshiasBMcc6A==}
     engines: {node: '>=6'}
-
-  throttleit@3.0.0:
-    resolution: {integrity: sha512-ewinRQ8oWJQ7R4hYkxW1ZlfG6UcMs8d4ExMTWhb1HU7ZQCU9HywgkxHEJrdlB4KJ3QrVvztXhIyIKGZMjrg2sg==}
-    engines: {node: '>=22'}
 
   time-span@5.1.0:
     resolution: {integrity: sha512-75voc/9G4rDIJleOo4jPvN4/YC4GRZrY8yy1uU4lwrB3XEQbWve8zXoO5No4eFrGcTAMYyoY67p8jRQdtA1HbA==}
@@ -4459,6 +4458,8 @@ snapshots:
 
   es-module-lexer@2.3.2: {}
 
+  es-toolkit@1.53.0: {}
+
   esbuild@0.28.2:
     optionalDependencies:
       '@esbuild/aix-ppc64': 0.28.2
@@ -5782,8 +5783,6 @@ snapshots:
       '@pkgr/core': 0.3.6
 
   tapable@2.3.3: {}
-
-  throttleit@3.0.0: {}
 
   time-span@5.1.0:
     dependencies:

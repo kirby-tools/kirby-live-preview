@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { PropType } from "vue";
-import type { PreviewFieldLabels, UpdateStrategy } from "../types";
+import type { PreviewFieldLabels } from "../types";
 import { licenseProps } from "@kirby-tools/licensing";
 import { LicensingButtonGroup } from "@kirby-tools/licensing/components";
+import { debounce } from "es-toolkit";
 import { useContent, useHelpers, usePanel, usePanelEvent } from "kirbyuse";
 import {
   disabled as disabledProp,
@@ -10,7 +11,6 @@ import {
   id as idProp,
   name as nameProp,
 } from "kirbyuse/props";
-import throttle from "throttleit";
 import { joinURL, withLeadingSlash } from "ufo";
 import {
   computed,
@@ -42,10 +42,6 @@ const props = defineProps({
   endpoints: {
     type: Object as PropType<{ field: string }>,
     required: true,
-  },
-  updateStrategy: {
-    type: String as PropType<UpdateStrategy>,
-    default: "interval",
   },
   updateInterval: {
     type: [Number, Boolean] as PropType<number | false>,
@@ -91,8 +87,9 @@ const containerHeight = computed(
     } - ${headerHeight.value}px - 2.75rem`,
 );
 
-const throttledRenderPreview = throttle(
-  coalesce(renderPreview),
+const renderPreviewSerially = coalesce(renderPreview);
+const debouncedRenderPreview = debounce(
+  renderPreviewSerially,
   props.updateInterval || 500,
 );
 let lastRenderedContent: string | undefined;
@@ -102,10 +99,9 @@ const eventsController = new AbortController();
 watch(contentChanges, (newValue) => {
   if (
     props.updateInterval !== false &&
-    props.updateStrategy === "interval" &&
     JSON.stringify(newValue) !== lastRenderedContent
   ) {
-    throttledRenderPreview(newValue);
+    debouncedRenderPreview(newValue);
   }
 });
 
@@ -150,22 +146,11 @@ onMounted(() => {
   window.addEventListener("message", handleMessage, {
     signal: eventsController.signal,
   });
-
-  if (props.updateStrategy === "blur") {
-    document.body.addEventListener(
-      "blur",
-      () => {
-        if (JSON.stringify(contentChanges.value) !== lastRenderedContent) {
-          throttledRenderPreview(contentChanges.value);
-        }
-      },
-      { capture: true, signal: eventsController.signal },
-    );
-  }
 });
 
 onBeforeUnmount(() => {
   eventsController.abort();
+  debouncedRenderPreview.cancel();
   topbarObserver?.disconnect();
 
   if (blobUrl.value) {
@@ -174,7 +159,8 @@ onBeforeUnmount(() => {
 });
 
 function renderUnsavedContent(options?: RenderOptions) {
-  throttledRenderPreview(contentChanges.value, options);
+  debouncedRenderPreview.cancel();
+  renderPreviewSerially(contentChanges.value, options);
 }
 
 function openPreviewInTab() {
