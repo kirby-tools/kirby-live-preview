@@ -1,9 +1,9 @@
-import LivePreview from "./components/LivePreview.vue";
+import Field from "./components/Field.vue";
 import "virtual:uno.css";
 
 window.panel.plugin("johannschopplich/live-preview", {
-  sections: {
-    preview: LivePreview,
+  fields: {
+    preview: Field,
   },
   icons: {
     // i-ri:restart-line
