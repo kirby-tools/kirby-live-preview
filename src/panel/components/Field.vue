@@ -39,10 +39,9 @@ const props = defineProps({
     required: true,
   },
   endpoints: {
-    type: Object as PropType<{ model: string }>,
+    type: Object as PropType<{ field: string }>,
     required: true,
   },
-  pageId: String,
   updateStrategy: {
     type: String as PropType<UpdateStrategy>,
     default: "interval",
@@ -50,10 +49,6 @@ const props = defineProps({
   updateInterval: {
     type: [Number, Boolean] as PropType<number | false>,
     default: 500,
-  },
-  interactable: {
-    type: Boolean,
-    default: true,
   },
   aspectRatio: String,
   ...licenseProps,
@@ -204,13 +199,8 @@ async function renderPreview(
 
   try {
     const { data: html } = await panel.api.post<{ data: string }>(
-      "__live-preview__/render",
-      {
-        pageId: props.pageId,
-        content,
-        interactable: props.interactable,
-        parent: props.endpoints.model,
-      },
+      `${props.endpoints.field}/render`,
+      { content },
     );
 
     const lastBlobUrl = blobUrl.value;

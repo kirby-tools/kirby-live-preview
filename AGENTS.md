@@ -23,6 +23,6 @@ pnpm run build:assets     # build the script injected into the preview (assets/i
 
 ## Search Hints
 
-- `__live-preview__/render` – API route that renders a page with the posted content
+- `PreviewField::api()` – the `render` route under the field's endpoint, renders the field's page with the posted content
 - `processHtml` – adds `data-preview-mode`, the iframe script and a `<base>` to the rendered HTML
 - `handleMessage` – the field's side of the iframe messages

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace JohannSchopplich\LivePreview;
 
+use Kirby\Api\Api;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Field\DisplayField;
 use Kirby\Reflection\Attributes\Prop;
@@ -13,7 +14,7 @@ final class PreviewField extends DisplayField
 {
     private const UPDATE_STRATEGIES = ['interval', 'blur'];
 
-    #[Prop(computed: true)]
+    #[Prop(computed: true, export: false)]
     protected string|null $pageId = null;
 
     #[Prop(computed: true)]
@@ -26,7 +27,7 @@ final class PreviewField extends DisplayField
     #[Prop(computed: true)]
     protected mixed $updateInterval = 500;
 
-    #[Prop]
+    #[Prop(export: false)]
     protected bool $interactable = true;
 
     #[Prop(computed: true)]
@@ -37,6 +38,35 @@ final class PreviewField extends DisplayField
 
     #[Prop(computed: true)]
     protected string $licenseDialog = '';
+
+    public function api(): array
+    {
+        $field = $this;
+
+        return [
+            [
+                'pattern' => 'render',
+                'method' => 'POST',
+                'action' => function () use ($field): array {
+                    /** @var Api $api */
+                    $api = $this;
+
+                    // `Api::page()` 404s on a page the user may not access, the check the model in the URL already passed.
+                    $page = $api->page($field->pageId() ?? $api->site()->homePageId());
+                    $preview = new LivePreview(page: $page, model: $field->model());
+
+                    return [
+                        'status' => 'ok',
+                        'code' => 200,
+                        'data' => $preview->render(
+                            content: $api->requestBody('content', []),
+                            interactable: $field->interactable()
+                        )
+                    ];
+                }
+            ]
+        ];
+    }
 
     public function label(): string
     {
@@ -52,6 +82,11 @@ final class PreviewField extends DisplayField
     public function pageId(): string|null
     {
         return $this->pageId ?? $this->model()->id();
+    }
+
+    public function interactable(): bool
+    {
+        return $this->interactable;
     }
 
     public function updateStrategy(): string

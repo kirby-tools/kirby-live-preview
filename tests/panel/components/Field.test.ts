@@ -26,7 +26,7 @@ it("keeps disabled off k-field", () => {
     props: {
       name: "preview",
       label: "Live Preview",
-      endpoints: { model: "pages/about" },
+      endpoints: { field: "pages/about/fields/preview" },
       licenseStatus: "active",
       licenseDialog: "",
     },

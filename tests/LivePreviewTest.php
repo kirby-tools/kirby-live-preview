@@ -18,9 +18,9 @@ final class LivePreviewTest extends TestCase
     #[Test]
     public function render_shows_the_unsaved_content_of_the_edited_page(): void
     {
-        $this->bootApp();
+        $app = $this->bootApp();
 
-        $html = (new LivePreview(id: 'about', parent: 'pages/about'))->render(['text' => 'Unsaved']);
+        $html = (new LivePreview(page: $app->page('about'), model: $app->page('about')))->render(['text' => 'Unsaved']);
 
         $this->assertStringContainsString('<p>Unsaved</p>', $html);
     }
@@ -28,9 +28,9 @@ final class LivePreviewTest extends TestCase
     #[Test]
     public function render_shows_another_page_as_saved(): void
     {
-        $this->bootApp();
+        $app = $this->bootApp();
 
-        $html = (new LivePreview(id: 'home', parent: 'pages/about'))->render(['text' => 'Unsaved']);
+        $html = (new LivePreview(page: $app->page('home'), model: $app->page('about')))->render(['text' => 'Unsaved']);
 
         $this->assertStringContainsString('<p>Saved home</p>', $html);
     }
@@ -38,9 +38,9 @@ final class LivePreviewTest extends TestCase
     #[Test]
     public function render_shows_the_unsaved_site_content_on_the_site_view(): void
     {
-        $this->bootApp();
+        $app = $this->bootApp();
 
-        $html = (new LivePreview(id: null, parent: 'site'))->render(['title' => 'Unsaved Site']);
+        $html = (new LivePreview(page: $app->page('home'), model: $app->site()))->render(['title' => 'Unsaved Site']);
 
         $this->assertStringContainsString('<title>Unsaved Site</title>', $html);
         $this->assertStringContainsString('<h1>Home</h1>', $html);
@@ -51,7 +51,7 @@ final class LivePreviewTest extends TestCase
     {
         $app = $this->bootApp();
 
-        $html = (new LivePreview(id: 'about', parent: 'pages/about'))->render();
+        $html = (new LivePreview(page: $app->page('about'), model: $app->page('about')))->render();
 
         $this->assertStringContainsString('<html data-preview-mode="true">', $html);
         $this->assertStringContainsString('<base href="https://example.com">', $html);
@@ -65,9 +65,9 @@ final class LivePreviewTest extends TestCase
     #[Test]
     public function render_blocks_pointer_events_unless_interactable(): void
     {
-        $this->bootApp();
+        $app = $this->bootApp();
 
-        $html = (new LivePreview(id: 'about', parent: 'pages/about'))->render(interactable: false);
+        $html = (new LivePreview(page: $app->page('about'), model: $app->page('about')))->render(interactable: false);
 
         $this->assertStringContainsString('<style>* { pointer-events: none !important; }</style>', $html);
     }
@@ -75,20 +75,20 @@ final class LivePreviewTest extends TestCase
     #[Test]
     public function render_rejects_a_template_without_head(): void
     {
-        $this->bootApp(['site' => ['children' => [['slug' => 'about', 'template' => 'headless']]]]);
+        $app = $this->bootApp(['site' => ['children' => [['slug' => 'about', 'template' => 'headless']]]]);
 
         $this->expectException(InvalidArgumentException::class);
 
-        (new LivePreview(id: 'about', parent: 'pages/about'))->render();
+        (new LivePreview(page: $app->page('about'), model: $app->page('about')))->render();
     }
 
     #[Test]
     public function render_reports_a_missing_template_with_kirbys_key(): void
     {
-        $this->bootApp(['roots' => ['templates' => __DIR__]]);
+        $app = $this->bootApp(['roots' => ['templates' => __DIR__]]);
 
         try {
-            (new LivePreview(id: 'about', parent: 'pages/about'))->render();
+            (new LivePreview(page: $app->page('about'), model: $app->page('about')))->render();
             $this->fail('Expected a NotFoundException');
         } catch (NotFoundException $e) {
             $this->assertSame('error.template.default.notFound', $e->getKey());

@@ -5,6 +5,7 @@ declare(strict_types = 1);
 use JohannSchopplich\LivePreview\PreviewField;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -19,19 +20,15 @@ final class PreviewFieldTest extends TestCase
     public function toArray_exports_the_preview_options_and_the_license_props(): void
     {
         $props = $this->field([
-            'pageId' => 'home',
             'updateStrategy' => 'blur',
             'updateInterval' => 1000,
-            'interactable' => false,
             'aspectRatio' => '16/9'
         ])->toArray();
 
         $expected = [
             'aspectRatio' => '16/9',
-            'interactable' => false,
             'licenseDialog' => 'johannschopplich-kirby-live-preview/activate',
             'licenseStatus' => 'inactive',
-            'pageId' => 'home',
             'updateInterval' => 1000,
             'updateStrategy' => 'blur'
         ];
@@ -100,6 +97,37 @@ final class PreviewFieldTest extends TestCase
         $this->field(['aspectRatio' => '16:9'])->aspectRatio();
     }
 
+    #[Test]
+    public function render_route_renders_the_model_with_the_posted_content(): void
+    {
+        $html = $this->callRenderRoute(body: ['content' => ['text' => 'Unsaved']]);
+
+        $this->assertStringContainsString('<p>Unsaved</p>', $html);
+    }
+
+    #[Test]
+    public function render_route_takes_pageId_and_interactable_from_the_blueprint_not_the_body(): void
+    {
+        $html = $this->callRenderRoute(
+            preview: ['pageId' => 'home', 'interactable' => false],
+            body: ['pageId' => 'about', 'interactable' => true]
+        );
+
+        $this->assertStringContainsString('<p>Saved home</p>', $html);
+        $this->assertStringContainsString('pointer-events: none', $html);
+    }
+
+    #[Test]
+    public function render_route_refuses_a_pageId_the_user_may_not_access(): void
+    {
+        try {
+            $this->callRenderRoute(preview: ['pageId' => 'secret']);
+            $this->fail('Expected a NotFoundException');
+        } catch (NotFoundException $e) {
+            $this->assertSame('error.page.notFound', $e->getKey());
+        }
+    }
+
     private function field(array $props = []): PreviewField
     {
         $app = new App([
@@ -117,5 +145,36 @@ final class PreviewFieldTest extends TestCase
             'type' => 'preview',
             ...$props
         ]);
+    }
+
+    private function callRenderRoute(array $preview = [], array $body = []): string
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null',
+                'templates' => __DIR__ . '/fixtures/templates'
+            ],
+            'options' => ['api' => ['allowImpersonation' => true]],
+            'blueprints' => [
+                'pages/default' => ['fields' => [
+                    'text' => ['type' => 'text'],
+                    'preview' => ['type' => 'preview', ...$preview]
+                ]],
+                'pages/secret' => ['options' => ['access' => false]]
+            ],
+            'roles' => [['name' => 'editor']],
+            'users' => [['email' => 'editor@example.com', 'role' => 'editor']],
+            'site' => [
+                'children' => [
+                    ['slug' => 'about', 'content' => ['text' => 'Saved about']],
+                    ['slug' => 'home', 'content' => ['text' => 'Saved home']],
+                    ['slug' => 'secret', 'template' => 'secret', 'content' => ['text' => 'Saved secret']]
+                ]
+            ]
+        ]);
+
+        $app->impersonate('editor@example.com');
+
+        return $app->api()->call('pages/about/fields/preview/render', 'POST', ['body' => $body])['data'];
     }
 }

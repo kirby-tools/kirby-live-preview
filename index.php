@@ -16,7 +16,6 @@ if (version_compare(Kirby::version() ?? '0', '6.0.0-beta', '<')) {
 Kirby::plugin(
     name: 'johannschopplich/live-preview',
     extends: [
-        'api' => require __DIR__ . '/src/extensions/api.php',
         'areas' => [
             'system' => fn () => [
                 'dialogs' => LicensePanel::dialogs(Licensing::PACKAGE_NAME, 'Kirby Live Preview')

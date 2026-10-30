@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace JohannSchopplich\LivePreview;
 
 use Kirby\Cms\App;
-use Kirby\Cms\Find;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
@@ -21,33 +20,24 @@ use Kirby\Toolkit\LazyValue;
 final class LivePreview
 {
     private readonly App $kirby;
-    private readonly Page $page;
-    private readonly ModelWithContent $model;
     private readonly Plugin $plugin;
     private readonly array $content;
 
     /**
-     * @param string $parent Panel path of the model the posted content belongs to, like `site` or `pages/notes+across-the-ocean`
+     * @param $model The model the posted content belongs to
      */
     public function __construct(
-        string|null $id,
-        string $parent
+        private readonly Page $page,
+        private readonly ModelWithContent $model
     ) {
         $kirby = App::instance();
-        $page = $id ? $kirby->page($id) : $kirby->site()->homePage();
         $plugin = $kirby->plugin('johannschopplich/live-preview');
-
-        if (!$page) {
-            throw new NotFoundException('Page not found');
-        }
 
         if (!$plugin) {
             throw new NotFoundException('Plugin assets not found');
         }
 
         $this->kirby = $kirby;
-        $this->page = $page;
-        $this->model = Find::parent($parent);
         $this->plugin = $plugin;
     }
 
