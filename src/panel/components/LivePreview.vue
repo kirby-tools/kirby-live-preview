@@ -20,6 +20,7 @@ import { section } from "kirbyuse/props";
 import throttle from "throttleit";
 import { joinURL, withLeadingSlash } from "ufo";
 import { useLocale, usePluginContext } from "../composables";
+import { coalesce } from "../utils/coalesce";
 
 const propsDefinition = {
   ...section,
@@ -141,7 +142,10 @@ const containerHeight = computed(
   licenseStatus.value = __PLAYGROUND__ ? "active" : context.licenseStatus;
 
   // The update interval can be `false`, so fall back to the default of 500 ms.
-  throttledRenderPreview = throttle(renderPreview, updateInterval.value || 500);
+  throttledRenderPreview = throttle(
+    coalesce(renderPreview),
+    updateInterval.value || 500,
+  );
 
   renderUnsavedContent();
 
@@ -255,7 +259,6 @@ async function renderPreview(
   content: Record<string, unknown>,
   { persistScrollPosition = true }: RenderOptions = {},
 ) {
-  if (isRendering.value) return;
   isRendering.value = true;
 
   let scrollPosition = 0;
