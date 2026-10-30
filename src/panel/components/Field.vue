@@ -22,6 +22,7 @@ import {
   watch,
 } from "vue";
 import { useLocale } from "../composables";
+import { coalesce } from "../utils/coalesce";
 import FieldBody from "./Ui/FieldBody.vue";
 
 interface RenderOptions {
@@ -91,7 +92,7 @@ const containerHeight = computed(
 );
 
 const throttledRenderPreview = throttle(
-  renderPreview,
+  coalesce(renderPreview),
   props.updateInterval || 500,
 );
 let lastRenderedContent: string | undefined;
@@ -185,7 +186,6 @@ async function renderPreview(
   content: Record<string, unknown>,
   { persistScrollPosition = true }: RenderOptions = {},
 ) {
-  if (isRendering.value) return;
   isRendering.value = true;
 
   let scrollPosition = 0;
