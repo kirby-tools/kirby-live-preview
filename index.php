@@ -1,30 +1,31 @@
 <?php
 
+use JohannSchopplich\LivePreview\Licensing;
+use JohannSchopplich\LivePreview\PreviewField;
 use Kirby\Cms\App as Kirby;
+use Kirby\Exception\LogicException;
+use KirbyTools\Licensing\LicensePanel;
+use KirbyTools\Licensing\PluginLicense;
+
+if (version_compare(Kirby::version() ?? '0', '6.0.0-beta', '<')) {
+    throw new LogicException('Kirby Live Preview requires Kirby 6');
+}
 
 @include_once __DIR__ . '/vendor/autoload.php';
 
-$packageName = 'johannschopplich/kirby-live-preview';
-$pluginConfig = [
-    'name' => 'johannschopplich/live-preview',
-    'extends' => [
+Kirby::plugin(
+    name: 'johannschopplich/live-preview',
+    extends: [
         'api' => require __DIR__ . '/src/extensions/api.php',
-        'sections' => require __DIR__ . '/src/extensions/sections.php',
+        'areas' => [
+            'system' => fn () => [
+                'dialogs' => LicensePanel::dialogs(Licensing::PACKAGE_NAME, 'Kirby Live Preview')
+            ]
+        ],
+        'fields' => [
+            'preview' => PreviewField::class
+        ],
         'translations' => require __DIR__ . '/src/extensions/translations.php'
-    ]
-];
-
-if (class_exists('Kirby\Plugin\License')) {
-    $pluginConfig['extends']['areas'] = [
-        'system' => fn () => [
-            'dialogs' => \JohannSchopplich\Licensing\LicensePanel::dialogs($packageName, 'Kirby Live Preview')
-        ]
-    ];
-
-    Kirby::plugin(
-        ...$pluginConfig,
-        license: fn ($plugin) => new \JohannSchopplich\Licensing\PluginLicense($plugin, $packageName)
-    );
-} else {
-    Kirby::plugin(...$pluginConfig);
-}
+    ],
+    license: fn ($plugin) => new PluginLicense($plugin, Licensing::PACKAGE_NAME)
+);

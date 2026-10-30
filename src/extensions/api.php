@@ -1,24 +1,10 @@
 <?php
 
-use JohannSchopplich\Licensing\LicensePanel;
-use JohannSchopplich\Licensing\Licenses;
 use JohannSchopplich\LivePreview\LivePreview;
 use Kirby\Cms\App;
 
 return [
     'routes' => fn (App $kirby) => [
-        ...LicensePanel::api('johannschopplich/kirby-live-preview'),
-        [
-            'pattern' => '__live-preview__/context',
-            'method' => 'GET',
-            'action' => function () {
-                $licenses = Licenses::read('johannschopplich/kirby-live-preview');
-
-                return [
-                    'licenseStatus' => $licenses->getStatus()
-                ];
-            }
-        ],
         [
             'pattern' => '__live-preview__/render',
             'method' => 'POST',

@@ -10,9 +10,11 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
+use Kirby\Content\MemoryStorage;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Form;
+use Kirby\Plugin\Plugin;
 use Kirby\Toolkit\Dom;
 use Kirby\Toolkit\LazyValue;
 
@@ -21,8 +23,7 @@ final class LivePreview
     private readonly App $kirby;
     private readonly Page $page;
     private readonly ModelWithContent $model;
-    // TODO: Type as `Kirby\Plugin\Plugin` once Kirby 4 support is dropped.
-    private readonly mixed $plugin;
+    private readonly Plugin $plugin;
     private readonly array $content;
 
     /**
@@ -66,14 +67,11 @@ final class LivePreview
     {
         $model = $model->clone();
 
-        $form = Form::for($model, [
-            'ignoreDisabled' => true,
-            'input' => $content,
-            'language' => $this->kirby->languageCode()
-        ]);
+        $values = Form::for($model, $this->kirby->languageCode())
+            ->submit(input: $content)
+            ->toStoredValues();
 
-        // TODO: Migrate to the `toStoredValues` method once Kirby 4 support is dropped.
-        $this->updateModelContent($model, $form->strings());
+        $this->updateModelContent($model, $values);
         $this->updateModelContent($model, ['previewMode' => 'true']);
 
         $this->processWriterFields($model);
@@ -106,9 +104,7 @@ final class LivePreview
         $template = $page->template();
 
         if (!$template->exists()) {
-            throw new NotFoundException([
-                'key' => 'template.default.notFound'
-            ]);
+            throw new NotFoundException(key: 'template.default.notFound');
         }
 
         // Stands in for Kirby's `$page->controller()` call, which cannot inject unsaved site content.
@@ -213,21 +209,13 @@ final class LivePreview
         return $dom->toString();
     }
 
-    /**
-     * Updates a model's content through the Kirby 5 version API, falling back to
-     * the content API for Kirby 4.
-     */
     private function updateModelContent(ModelWithContent $model, array $data): void
     {
-        if (method_exists($model, 'version')) {
-            // Prevents changes from being written to disk during the preview.
-            if (!($model->storage() instanceof \Kirby\Content\MemoryStorage)) {
-                $model = $model->changeStorage(\Kirby\Content\MemoryStorage::class, copy: true);
-            }
-
-            $model->version()->update($data);
-        } else {
-            $model->content()->update($data);
+        // Prevents changes from being written to disk during the preview.
+        if (!$model->storage() instanceof MemoryStorage) {
+            $model->changeStorage(MemoryStorage::class, copy: true);
         }
+
+        $model->version()->update($data);
     }
 }
