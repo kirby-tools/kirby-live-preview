@@ -2,12 +2,12 @@
 
 # Kirby Live Preview
 
-Kirby Live Preview is a plugin for [Kirby CMS](https://getkirby.com) that adds a Panel section to render any page in an iframe – content updates as editors type. Navigate by clicking links inside the preview – the matching Panel view opens instead of the linked page. Pin the section sticky to keep it visible while editing blocks and other fields side-by-side.
+Kirby Live Preview is a plugin for [Kirby CMS](https://getkirby.com) that adds a Panel field to render any page in an iframe – content updates as editors type. Navigate by clicking links inside the preview – the matching Panel view opens instead of the linked page. Pin the field sticky to keep it visible while editing blocks and other fields side-by-side.
 
 ## Features
 
-- 🖥️ **Renders as You Type**: The section refreshes on every change, before anything is saved.
-- 📱 **Three Screen Widths**: Toggle the preview to 390, 768, or 1440 pixels wide; where the section is narrower, the page is scaled down.
+- 🖥️ **Renders as You Type**: The field refreshes on every change, before anything is saved.
+- 📱 **Three Screen Widths**: Toggle the preview to 390, 768, or 1440 pixels wide; where the field is narrower, the page is scaled down.
 - 🔍 **Preview Mode**: The rendered page carries a preview-mode attribute on its `html` element and a `previewMode()` method in PHP, so it can hide the cookie banner or skip animations.
 - 🔗 **Links Open Panel Pages**: A click on a link inside the preview opens the linked page in the Panel; links to other sites open in a new tab.
 
@@ -17,7 +17,7 @@ Kirby Live Preview is a commercial plugin that requires a license. You can insta
 
 ## Requirements
 
-- Kirby 4 or Kirby 5
+- Kirby 6
 
 ## Installation
 
@@ -30,6 +30,24 @@ composer require johannschopplich/kirby-live-preview
 ### Manual Installation
 
 Download and copy this repository to `/site/plugins/kirby-live-preview`.
+
+## Upgrading from Live Preview 2
+
+Live Preview 3 requires Kirby 6, which has no plugin sections, so the Live Preview section is a field now. Kirby shows `Invalid section type ("preview")` until you move it from `sections:` to `fields:`. Its options stay the same:
+
+```yaml
+# Live Preview 2
+sections:
+  livePreview:
+    type: preview
+
+# Live Preview 3
+fields:
+  livePreview:
+    type: preview
+```
+
+An `updateStrategy` other than `interval` or `blur` shows an error in place of the field instead of falling back to `interval`. `interactable: 0` makes the preview inert like `false`.
 
 ## Documentation
 
@@ -49,7 +67,7 @@ For the sake of reproducible bug reports, please include the following informati
 
 - Kirby & Kirby Live Preview version
 - Browser environment (name, version, operating system)
-- Global and section configuration (without any sensitive information)
+- Field configuration (without any sensitive information)
 - Steps to reproduce the bug (if no reproduction is provided)
 - Screenshots or screen recordings if applicable
 
