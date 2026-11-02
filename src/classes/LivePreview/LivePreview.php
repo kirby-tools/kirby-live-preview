@@ -206,6 +206,6 @@ final class LivePreview
             $model->changeStorage(MemoryStorage::class, copy: true);
         }
 
-        $model->version()->update($data);
+        $model->version()->update($data, 'current');
     }
 }

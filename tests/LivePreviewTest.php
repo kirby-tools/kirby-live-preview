@@ -26,6 +26,33 @@ final class LivePreviewTest extends TestCase
     }
 
     #[Test]
+    public function render_shows_the_unsaved_content_in_the_current_language(): void
+    {
+        $app = $this->bootApp([
+            'languages' => [
+                ['code' => 'en', 'default' => true, 'name' => 'English'],
+                ['code' => 'de', 'name' => 'Deutsch']
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'about',
+                        'translations' => [
+                            ['code' => 'en', 'content' => ['title' => 'About', 'text' => 'Saved about']],
+                            ['code' => 'de', 'content' => ['title' => 'Über uns', 'text' => 'Gespeichert']]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+        $app->setCurrentLanguage('de');
+
+        $html = (new LivePreview(page: $app->page('about'), model: $app->page('about')))->render(['text' => 'Ungespeichert']);
+
+        $this->assertStringContainsString('<p>Ungespeichert</p>', $html);
+    }
+
+    #[Test]
     public function render_shows_another_page_as_saved(): void
     {
         $app = $this->bootApp();
