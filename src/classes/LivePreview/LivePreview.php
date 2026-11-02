@@ -225,7 +225,7 @@ final class LivePreview
                 $model = $model->changeStorage(\Kirby\Content\MemoryStorage::class, copy: true);
             }
 
-            $model->version()->update($data);
+            $model->version()->update($data, 'current');
         } else {
             $model->content()->update($data);
         }
