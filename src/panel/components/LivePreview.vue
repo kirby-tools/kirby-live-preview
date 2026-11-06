@@ -421,6 +421,7 @@ function uppercaseFirst(string: string) {
         variant="filled"
         size="xs"
         icon="live-preview-restart"
+        :title="panel.t('johannschopplich.preview.restart')"
         @click="renderUnsavedContent()"
       />
     </div>
