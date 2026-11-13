@@ -6,9 +6,9 @@ Kirby Live Preview is a plugin for [Kirby CMS](https://getkirby.com) that adds a
 
 ## Features
 
-- 🖥️ **Renders as You Type**: The field refreshes on every change, before anything is saved.
+- 🖥️ **Renders as You Type**: The field rerenders once you pause typing, before anything is saved.
 - 📱 **Three Screen Widths**: Toggle the preview to 390, 768, or 1440 pixels wide; where the field is narrower, the page is scaled down.
-- 🔍 **Preview Mode**: The rendered page carries a preview-mode attribute on its `html` element and a `previewMode()` method in PHP, so it can hide the cookie banner or skip animations.
+- 🔍 **Preview Mode**: The rendered page carries a `data-preview-mode` attribute on its `html` element and a `previewMode()` method in PHP, so it can hide the cookie banner or skip animations.
 - 🔗 **Links Open Panel Pages**: A click on a link inside the preview opens the linked page in the Panel; links to other sites open in a new tab.
 
 ## Licensing
@@ -29,7 +29,7 @@ composer require johannschopplich/kirby-live-preview
 
 ### Manual Installation
 
-Download and copy this repository to `/site/plugins/kirby-live-preview`.
+Download a [release](https://github.com/kirby-tools/kirby-live-preview/releases) and extract it to `/site/plugins/kirby-live-preview`.
 
 ## Upgrading from Live Preview 2
 
@@ -47,7 +47,7 @@ fields:
     type: preview
 ```
 
-The preview renders once you stop typing for `updateInterval` milliseconds, 500 by default, instead of every interval while you type. `updateStrategy` is gone: the pause covers what `blur` was for, and Kirby ignores the option. `interactable: 0` makes the preview inert like `false`.
+The preview renders once you stop typing for `updateInterval` milliseconds, 500 by default, instead of every interval while you type. `updateStrategy` is gone: the pause covers what `blur` was for, and Kirby ignores the option. `interactable: 0` blocks the pointer like `false`.
 
 ## Documentation
 
