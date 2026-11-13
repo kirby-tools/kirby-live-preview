@@ -110,6 +110,7 @@ watch(
 );
 
 usePanelEvent("page.changeTitle", renderUnsavedContent);
+usePanelEvent("site.changeTitle", renderUnsavedContent);
 usePanelEvent("file.sort", renderUnsavedContent);
 usePanelEvent("model.update", renderUnsavedContent);
 
