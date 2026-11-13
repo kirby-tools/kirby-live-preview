@@ -11,7 +11,6 @@ import {
   id as idProp,
   name as nameProp,
 } from "kirbyuse/props";
-import { joinURL, withLeadingSlash } from "ufo";
 import {
   computed,
   nextTick,
@@ -21,8 +20,8 @@ import {
   useTemplateRef,
   watch,
 } from "vue";
-import { useLocale } from "../composables";
 import { coalesce } from "../utils/coalesce";
+import { resolvePreviewLink } from "../utils/link";
 import FieldBody from "./Ui/FieldBody.vue";
 
 interface RenderOptions {
@@ -51,12 +50,8 @@ const props = defineProps({
   ...licenseProps,
 });
 
-// eslint-disable-next-line regexp/no-super-linear-backtracking
-const PATH_PARAMS_REGEX = /\/[^/]+?:.+$/;
-
 const panel = usePanel();
 const helpers = useHelpers();
-const { getNonLocalizedPath } = useLocale();
 const { contentChanges } = useContent();
 
 const hasLicenseButtons = !__PLAYGROUND__;
@@ -242,37 +237,29 @@ async function handleMessage({ data, source }: MessageEvent) {
   }
 
   if (data.type === "link") {
-    const url = new URL(data.href);
-
     if (helpers.url.hasDangerousScheme(data.href)) {
       return;
     }
 
-    if (url.origin !== window.location.origin) {
+    const target = resolvePreviewLink(new URL(data.href), {
+      origin: window.location.origin,
+      siteUrl: panel.urls.site,
+      locales: panel.languages.map((language) => language.code),
+    });
+
+    if (target.type === "external") {
       window.open(data.href, "_blank", "noopener");
       return;
     }
 
-    if (
-      ["assets", "media"].some((path) => url.pathname.startsWith(`/${path}/`))
-    ) {
+    if (target.type === "none") {
       return;
-    }
-
-    let path = getNonLocalizedPath(url).slice(1);
-
-    if (path) {
-      // Strip Kirby path parameters, like the `tag:sky` in `notes/tag:sky`.
-      path = path.replace(PATH_PARAMS_REGEX, "");
-      path = joinURL("pages", path.replaceAll("/", "+"));
-    } else {
-      path = "site";
     }
 
     // Custom implementation of `panel.open` to avoid error notifications.
     try {
       panel.isLoading = true;
-      const state = await panel.get(withLeadingSlash(path));
+      const state = await panel.get(target.path);
       panel.set(state);
     } catch (error) {
       console.error(error);
