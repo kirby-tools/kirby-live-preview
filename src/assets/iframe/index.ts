@@ -33,9 +33,13 @@ document.addEventListener("click", (event) => {
   }
 });
 
-// Catches all Cmd+S events and passes them to the parent window.
+// Passes Cmd/Ctrl+S to the parent window.
 document.addEventListener("keydown", (event) => {
-  if (event.key === "s" && (event.metaKey || event.ctrlKey)) {
+  if (
+    window.parent !== window &&
+    event.key === "s" &&
+    (event.metaKey || event.ctrlKey)
+  ) {
     event.preventDefault();
     window.parent.postMessage(
       {
@@ -45,4 +49,3 @@ document.addEventListener("keydown", (event) => {
     );
   }
 });
-
