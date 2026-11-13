@@ -274,9 +274,10 @@ async function handleMessage({ data, source }: MessageEvent) {
       panel.isLoading = true;
       const state = await panel.get(withLeadingSlash(path));
       panel.set(state);
-      panel.isLoading = false;
     } catch (error) {
       console.error(error);
+    } finally {
+      panel.isLoading = false;
     }
   }
 }
