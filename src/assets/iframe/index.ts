@@ -18,17 +18,6 @@ document.addEventListener("click", (event) => {
       return;
     }
 
-    const url = tryParseUrl(link.href);
-
-    if (!url) {
-      return;
-    }
-
-    // A link with a path and a fragment loads that page, as saved, inside the preview instead of navigating the Panel.
-    if (url.hash) {
-      return;
-    }
-
     if (link.dataset.previewIgnore !== undefined || window.parent === window) {
       return;
     }
@@ -57,10 +46,3 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-function tryParseUrl(url: string) {
-  try {
-    return new URL(url);
-  } catch {
-    return undefined;
-  }
-}

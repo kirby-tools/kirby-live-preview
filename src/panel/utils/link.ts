@@ -3,7 +3,10 @@ import { joinURL } from "ufo";
 const PATH_PARAMS_REGEX = /\/[^/:]+:.+$/;
 
 export type PreviewLinkTarget =
-  { type: "external" } | { type: "none" } | { type: "panel"; path: string };
+  | { type: "external" }
+  | { type: "none" }
+  | { type: "preview" }
+  | { type: "panel"; path: string };
 
 export function resolvePreviewLink(
   url: URL,
@@ -29,6 +32,11 @@ export function resolvePreviewLink(
     ["assets", "media"].some((folder) => sitePath.startsWith(`/${folder}/`))
   ) {
     return { type: "none" };
+  }
+
+  // A fragment link loads the page, as saved, inside the preview instead of navigating the Panel.
+  if (url.hash) {
+    return { type: "preview" };
   }
 
   const parts = sitePath.split("/").filter(Boolean);

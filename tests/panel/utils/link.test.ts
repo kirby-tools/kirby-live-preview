@@ -34,4 +34,22 @@ describe("resolvePreviewLink", () => {
       }),
     ).toEqual({ type: "panel", path: "/pages/about" });
   });
+
+  it("keeps a fragment link in the preview only for a page of the site", () => {
+    expect(
+      resolvePreviewLink(
+        new URL("https://example.com/sub/about#team"),
+        options,
+      ),
+    ).toEqual({ type: "preview" });
+    expect(
+      resolvePreviewLink(new URL("https://other.example/#team"), options),
+    ).toEqual({ type: "external" });
+    expect(
+      resolvePreviewLink(
+        new URL("https://example.com/sub/media/a.pdf#page=2"),
+        options,
+      ),
+    ).toEqual({ type: "none" });
+  });
 });

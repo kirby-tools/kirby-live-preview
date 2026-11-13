@@ -237,7 +237,7 @@ async function handleMessage({ data, source }: MessageEvent) {
   }
 
   if (data.type === "link") {
-    if (helpers.url.hasDangerousScheme(data.href)) {
+    if (!URL.canParse(data.href) || helpers.url.hasDangerousScheme(data.href)) {
       return;
     }
 
@@ -253,6 +253,11 @@ async function handleMessage({ data, source }: MessageEvent) {
     }
 
     if (target.type === "none") {
+      return;
+    }
+
+    if (target.type === "preview") {
+      (source as Window).location.href = data.href;
       return;
     }
 
