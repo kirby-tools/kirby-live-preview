@@ -116,6 +116,7 @@ watch(
 
 usePanelEvent("page.changeTitle", renderUnsavedContent);
 usePanelEvent("file.sort", renderUnsavedContent);
+usePanelEvent("model.update", renderUnsavedContent);
 
 onMounted(() => {
   renderUnsavedContent();
