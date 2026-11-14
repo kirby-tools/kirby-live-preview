@@ -1,7 +1,5 @@
 import { joinURL } from "ufo";
 
-const PATH_PARAMS_REGEX = /\/[^/:]+:.+$/;
-
 export type PreviewLinkTarget =
   | { type: "external" }
   | { type: "none" }
@@ -39,7 +37,10 @@ export function resolvePreviewLink(
     return { type: "preview" };
   }
 
-  const parts = sitePath.split("/").filter(Boolean);
+  // Strip Kirby path parameters, like the `tag:sky` in `notes/tag:sky`.
+  const parts = sitePath
+    .split("/")
+    .filter((part) => part && !part.includes(":"));
 
   if (parts[0] && locales.includes(parts[0])) {
     parts.shift();
@@ -49,8 +50,5 @@ export function resolvePreviewLink(
     return { type: "panel", path: "/site" };
   }
 
-  // Strip Kirby path parameters, like the `tag:sky` in `notes/tag:sky`.
-  const path = parts.join("/").replace(PATH_PARAMS_REGEX, "");
-
-  return { type: "panel", path: joinURL("/pages", path.replaceAll("/", "+")) };
+  return { type: "panel", path: joinURL("/pages", parts.join("+")) };
 }

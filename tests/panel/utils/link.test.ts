@@ -26,6 +26,18 @@ describe("resolvePreviewLink", () => {
     ).toEqual({ type: "external" });
   });
 
+  it("strips every path parameter segment, resolving a home page link to /site", () => {
+    expect(
+      resolvePreviewLink(
+        new URL("https://example.com/sub/notes/tag:sky/archive"),
+        options,
+      ),
+    ).toEqual({ type: "panel", path: "/pages/notes+archive" });
+    expect(
+      resolvePreviewLink(new URL("https://example.com/sub/de/page:2"), options),
+    ).toEqual({ type: "panel", path: "/site" });
+  });
+
   it("resolves links against a relative site URL", () => {
     expect(
       resolvePreviewLink(new URL("https://example.com/about"), {
