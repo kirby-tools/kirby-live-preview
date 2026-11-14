@@ -26,9 +26,6 @@ const propsDefinition = {
   ...section,
 };
 
-// eslint-disable-next-line regexp/no-super-linear-backtracking
-const PATH_PARAMS_REGEX = /\/[^/]+?:.+$/;
-
 export default {
   inheritAttrs: false,
 };
@@ -349,15 +346,11 @@ async function handleMessage({ data, source }: MessageEvent) {
       return;
     }
 
-    let path = getNonLocalizedPath(url).slice(1);
-
-    if (path) {
-      // Strip Kirby path parameters, like the `tag:sky` in `notes/tag:sky`.
-      path = path.replace(PATH_PARAMS_REGEX, "");
-      path = joinURL("pages", path.replaceAll("/", "+"));
-    } else {
-      path = "site";
-    }
+    // Strip Kirby path parameters, like the `tag:sky` in `notes/tag:sky`.
+    const parts = getNonLocalizedPath(url)
+      .split("/")
+      .filter((part) => part && !part.includes(":"));
+    const path = parts.length > 0 ? joinURL("pages", parts.join("+")) : "site";
 
     // Custom implementation of `panel.open` to avoid error notifications.
     try {
