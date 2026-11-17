@@ -29,9 +29,9 @@
             'dev_requirement' => false,
         ),
         'johannschopplich/kirby-tools-licensing' => array(
-            'pretty_version' => '0.9.5',
-            'version' => '0.9.5.0',
-            'reference' => '18ce762ee7f296a0c7ed37eeb9fa09159c50a73d',
+            'pretty_version' => '1.0.0-beta.1',
+            'version' => '1.0.0.0-beta1',
+            'reference' => 'f1814e0555aae86250054ce660d9b540c46b4328',
             'type' => 'library',
             'install_path' => __DIR__ . '/../johannschopplich/kirby-tools-licensing',
             'aliases' => array(),

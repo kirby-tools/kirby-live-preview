@@ -10,9 +10,6 @@ return [
     'panel' => [
         'css' => 'assets/panel.css',
         'favicon' => 'favicon.ico',
-        'vue' => [
-            'compiler' => false
-        ],
         'frameAncestors' => ['https://kirby.tools', 'self']
     ]
 ];

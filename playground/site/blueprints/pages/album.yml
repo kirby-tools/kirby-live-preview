@@ -38,7 +38,7 @@ columns:
 
   - width: 2/3
     sticky: true
-    sections:
+    fields:
       preview:
         label: Sticky Live Preview
         type: preview

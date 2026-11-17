@@ -29,6 +29,6 @@ columns:
         layout: cards
 
   - width: 1/1
-    sections:
+    fields:
       preview:
         type: preview

@@ -5,16 +5,18 @@ icon: 🖼
 options:
   preview: https://kirby.tools/live-preview/buy
 
-sections:
-  drafts:
-    extends: sections/albums
-    label: Drafts
-    status: draft
+columns:
+  - sections:
+      drafts:
+        extends: sections/albums
+        label: Drafts
+        status: draft
 
-  listed:
-    extends: sections/albums
-    label: Published Albums
-    status: listed
+      listed:
+        extends: sections/albums
+        label: Published Albums
+        status: listed
 
-  preview:
-    type: preview
+  - fields:
+      preview:
+        type: preview
