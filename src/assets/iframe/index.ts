@@ -29,7 +29,7 @@ document.addEventListener("click", (event) => {
       return;
     }
 
-    if (link.dataset.previewIgnore !== undefined) {
+    if (link.dataset.previewIgnore !== undefined || window.parent === window) {
       return;
     }
 
