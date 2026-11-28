@@ -2,7 +2,7 @@
   "name": "johannschopplich/kirby-live-preview",
   "description": "See unsaved changes live, on any screen size",
   "type": "kirby-plugin",
-  "version": "2.7.1",
+  "version": "2.8.0",
   "keywords": [
     "kirby",
     "kirby-cms",
